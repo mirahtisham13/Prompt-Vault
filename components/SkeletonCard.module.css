@@ -1,0 +1,11 @@
+.card { pointer-events: none; }
+.image { height: 220px; width: 100%; border-radius: 0; }
+.body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.meta { display: flex; gap: 6px; }
+.badge { height: 22px; width: 70px; border-radius: 99px; }
+.title { height: 20px; width: 70%; border-radius: 6px; }
+.lines { display: flex; flex-direction: column; gap: 8px; }
+.line { height: 13px; border-radius: 4px; }
+.actions { display: flex; gap: 6px; padding-top: 8px; border-top: 1px solid var(--border); }
+.actionBtn { height: 30px; width: 60px; border-radius: 8px; }
+.copyBtn { height: 30px; width: 100px; border-radius: 8px; }
