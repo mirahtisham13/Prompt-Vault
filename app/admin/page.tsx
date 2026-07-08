@@ -9,6 +9,7 @@ import {
 import { Prompt } from '@/lib/types';
 import { MOCK_PROMPTS, MOCK_CATEGORIES } from '@/lib/mockData';
 import { supabase } from '@/lib/supabase';
+import { PLATFORM_META, formatNumber } from '@/lib/utils';
 import styles from './admin.module.css';
 
 type Tab = 'prompts' | 'categories' | 'analytics';
