@@ -81,23 +81,29 @@ export default function AdminPage() {
 
     let finalImageUrl = form.image_url;
     if (imageFile) {
-      const fileExt = imageFile.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage
-        .from('prompt-images')
-        .upload(fileName, imageFile);
+      const formData = new FormData();
+      formData.append('file', imageFile);
 
-      if (uploadError) {
-        alert('Failed to upload image: ' + uploadError.message);
+      try {
+        const res = await fetch('/api/upload-image', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        const data = await res.json();
+        
+        if (!res.ok || data.error) {
+          alert('Failed to upload image: ' + (data.error || 'Unknown error'));
+          setIsUploading(false);
+          return;
+        }
+        
+        finalImageUrl = data.url;
+      } catch (err) {
+        alert('Failed to upload image: Network error');
         setIsUploading(false);
         return;
       }
-      
-      const { data: publicUrlData } = supabase.storage
-        .from('prompt-images')
-        .getPublicUrl(fileName);
-        
-      finalImageUrl = publicUrlData.publicUrl;
     }
 
     const payload = { ...form, image_url: finalImageUrl };
