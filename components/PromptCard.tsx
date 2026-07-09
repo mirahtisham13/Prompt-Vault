@@ -5,6 +5,7 @@ import { Prompt } from '@/lib/types';
 import { MOCK_CATEGORIES } from '@/lib/mockData';
 import { PLATFORM_META, copyToClipboard, formatNumber, truncateText } from '@/lib/utils';
 import { useToast } from './ToastProvider';
+import PromptFormatter from './PromptFormatter';
 import styles from './PromptCard.module.css';
 
 interface PromptCardProps {
@@ -36,6 +37,13 @@ export default function PromptCard({ prompt, onOpenModal, onShare }: PromptCardP
       await copyToClipboard(prompt.text);
       setCopied(true); setCopies(c => c + 1); toast('Prompt copied! ✨');
       setTimeout(() => setCopied(false), 2000);
+      
+      // Ping API to track copy
+      fetch('/api/track-copy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ promptId: prompt.id })
+      }).catch(console.error);
     } catch { toast('Failed to copy', 'error'); }
   };
 
@@ -51,7 +59,9 @@ export default function PromptCard({ prompt, onOpenModal, onShare }: PromptCardP
       <div className={styles.body}>
         <h3 className={styles.title}>{prompt.title}</h3>
         <div className={styles.textWrap}>
-          <p className={styles.text}>{showFull ? prompt.text : truncated}</p>
+          <p className={styles.text}>
+            <PromptFormatter text={showFull ? prompt.text : truncated} />
+          </p>
           {isTruncated && <button className={styles.showMore} onClick={() => setShowFull(p => !p)}>{showFull ? 'Show less' : 'Show more'}</button>}
         </div>
         {prompt.tags?.length > 0 && (

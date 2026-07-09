@@ -5,6 +5,7 @@ import { Prompt } from '@/lib/types';
 import { MOCK_CATEGORIES } from '@/lib/mockData';
 import { PLATFORM_META, copyToClipboard, formatNumber } from '@/lib/utils';
 import { useToast } from './ToastProvider';
+import PromptFormatter from './PromptFormatter';
 import styles from './PromptModal.module.css';
 
 interface PromptModalProps { prompt: Prompt | null; onClose: () => void; onShare: (prompt: Prompt) => void; }
@@ -18,13 +19,22 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
 
   const handleCopy = async () => {
     if (!prompt) return;
-    try { await copyToClipboard(prompt.text); setCopied(true); toast('Prompt copied! ✨'); setTimeout(() => setCopied(false), 2500); }
-    catch { toast('Failed to copy', 'error'); }
+    try { 
+      await copyToClipboard(prompt.text); 
+      setCopied(true); 
+      toast('Prompt copied! ✨'); 
+      setTimeout(() => setCopied(false), 2500); 
+
+      // Ping API to track copy
+      fetch('/api/track-copy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ promptId: prompt.id })
+      }).catch(console.error);
+    } catch { toast('Failed to copy', 'error'); }
   };
 
   if (!isOpen) return null;
-  const platform = PLATFORM_META[prompt.platform] ?? PLATFORM_META['gemini'];
-  const category = MOCK_CATEGORIES.find(c => c.slug === prompt.category);
 
   return (
     <div className={`modal-overlay ${isOpen ? 'open' : ''}`} onClick={onClose} role="dialog" aria-modal="true">
@@ -41,11 +51,13 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
         <div className={styles.content}>
           <div className={styles.badges}>
             {prompt.is_featured && <span className={`badge ${styles.featuredBadge}`}><Star size={10} fill="currentColor" /> Featured</span>}
-            {category && <span className={`badge ${styles.catBadge}`} style={{ '--cat-color': category.color } as React.CSSProperties}>{category.icon} {category.name}</span>}
-            <span className={`badge ${styles.platBadge}`} style={{ '--p-color': platform.color } as React.CSSProperties}>{platform.emoji} {platform.label}</span>
           </div>
           <h2 className={styles.title}>{prompt.title}</h2>
-          <div className={styles.promptBox}><p className={styles.promptText}>{prompt.text}</p></div>
+          <div className={styles.promptBox}>
+            <p className={styles.promptText}>
+              <PromptFormatter text={prompt.text} />
+            </p>
+          </div>
           {prompt.tags?.length > 0 && <div className={styles.tags}>{prompt.tags.map(tag => <span key={tag} className={styles.tag}>#{tag}</span>)}</div>}
           <div className={styles.stats}>
             <span className={styles.stat}><Heart size={13} fill="currentColor" style={{ color: '#f43f5e' }} />{formatNumber(prompt.likes)} likes</span>
