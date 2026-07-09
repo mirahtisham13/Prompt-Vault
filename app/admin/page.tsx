@@ -90,7 +90,15 @@ export default function AdminPage() {
           body: formData,
         });
         
-        const data = await res.json();
+        let data;
+        const text = await res.text();
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          alert('Upload failed: Server returned an invalid response (500). Please check Vercel logs.');
+          setIsUploading(false);
+          return;
+        }
         
         if (!res.ok || data.error) {
           alert('Failed to upload image: ' + (data.error || 'Unknown error'));
@@ -99,8 +107,8 @@ export default function AdminPage() {
         }
         
         finalImageUrl = data.url;
-      } catch (err) {
-        alert('Failed to upload image: Network error');
+      } catch (err: any) {
+        alert('Failed to upload image: ' + err.message);
         setIsUploading(false);
         return;
       }

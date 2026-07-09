@@ -19,10 +19,17 @@ export async function POST(request: Request) {
     const fileExt = file.name.split('.').pop();
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
 
+    // Convert file to buffer for Node environment compatibility
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
     // Upload using admin privileges
     const { error: uploadError } = await supabaseAdmin.storage
       .from('prompt-images')
-      .upload(fileName, file);
+      .upload(fileName, buffer, {
+        contentType: file.type,
+        upsert: false
+      });
 
     if (uploadError) {
       console.error('Upload error:', uploadError);
