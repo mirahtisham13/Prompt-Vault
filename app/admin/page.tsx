@@ -30,6 +30,8 @@ export default function AdminPage() {
   const [tagInput, setTagInput] = useState('');
   const [searchQ, setSearchQ] = useState('');
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const checkAuthAndFetch = async () => {
@@ -57,6 +59,7 @@ export default function AdminPage() {
     setForm({ ...EMPTY_PROMPT });
     setEditingId(null);
     setTagInput('');
+    setImageFile(null);
     setShowForm(true);
   };
 
@@ -68,21 +71,47 @@ export default function AdminPage() {
     });
     setEditingId(p.id);
     setTagInput('');
+    setImageFile(null);
     setShowForm(true);
   };
 
   const handleSave = async () => {
     if (!form.title || !form.text) return;
+    setIsUploading(true);
+
+    let finalImageUrl = form.image_url;
+    if (imageFile) {
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const { error: uploadError } = await supabase.storage
+        .from('prompt-images')
+        .upload(fileName, imageFile);
+
+      if (uploadError) {
+        alert('Failed to upload image: ' + uploadError.message);
+        setIsUploading(false);
+        return;
+      }
+      
+      const { data: publicUrlData } = supabase.storage
+        .from('prompt-images')
+        .getPublicUrl(fileName);
+        
+      finalImageUrl = publicUrlData.publicUrl;
+    }
+
+    const payload = { ...form, image_url: finalImageUrl };
+
     if (editingId) {
-      const { error } = await supabase.from('prompts').update(form).eq('id', editingId);
+      const { error } = await supabase.from('prompts').update(payload).eq('id', editingId);
       if (!error) {
-        setPrompts(prev => prev.map(p => p.id === editingId ? { ...p, ...form } : p));
+        setPrompts(prev => prev.map(p => p.id === editingId ? { ...p, ...payload } : p));
       } else {
         alert('Failed to save changes: ' + error.message);
       }
     } else {
       const newPrompt = {
-        ...form,
+        ...payload,
         id: crypto.randomUUID(),
         likes: 0,
         copies: 0,
@@ -95,6 +124,7 @@ export default function AdminPage() {
         alert('Failed to add prompt: ' + error.message);
       }
     }
+    setIsUploading(false);
     setShowForm(false);
   };
 
@@ -291,8 +321,12 @@ export default function AdminPage() {
                 />
               </div>
               <div className={styles.formField}>
-                <label>Image URL</label>
-                <input className="input" value={form.image_url ?? ''} onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))} placeholder="https://…" />
+                <label>Image URL or Upload</label>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input className="input" value={form.image_url ?? ''} onChange={e => { setForm(f => ({ ...f, image_url: e.target.value })); setImageFile(null); }} placeholder="Paste a link..." style={{ flex: 1 }} />
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>OR</span>
+                  <input type="file" accept="image/*" onChange={e => { if (e.target.files?.[0]) { setImageFile(e.target.files[0]); setForm(f => ({ ...f, image_url: '' })); } }} style={{ width: '180px', fontSize: '12px' }} />
+                </div>
               </div>
               <div className={styles.formField}>
                 <label>Tags</label>
@@ -328,9 +362,9 @@ export default function AdminPage() {
             </div>
 
             <div className={styles.formFooter}>
-              <button className="btn btn-ghost" onClick={() => setShowForm(false)}>Cancel</button>
-              <button className="btn btn-primary" onClick={handleSave} disabled={!form.title || !form.text}>
-                <Save size={15} /> {editingId ? 'Save Changes' : 'Create Prompt'}
+              <button className="btn btn-ghost" onClick={() => setShowForm(false)} disabled={isUploading}>Cancel</button>
+              <button className="btn btn-primary" onClick={handleSave} disabled={!form.title || !form.text || isUploading}>
+                <Save size={15} /> {isUploading ? 'Saving...' : (editingId ? 'Save Changes' : 'Create Prompt')}
               </button>
             </div>
           </div>
