@@ -128,7 +128,6 @@ export default function AdminPage() {
         <nav className={styles.nav}>
           {([
             { id: 'prompts',    icon: <Tag size={16} />,       label: 'Prompts' },
-            { id: 'categories', icon: <Star size={16} />,      label: 'Categories' },
             { id: 'analytics',  icon: <BarChart2 size={16} />, label: 'Analytics' },
           ] as { id: Tab; icon: React.ReactNode; label: string }[]).map(item => (
             <button
@@ -153,7 +152,6 @@ export default function AdminPage() {
           <div>
             <h1 className={styles.pageTitle}>
               {tab === 'prompts' && 'Manage Prompts'}
-              {tab === 'categories' && 'Manage Categories'}
               {tab === 'analytics' && 'Analytics'}
             </h1>
             <p className={styles.pageSubtitle}>PromptVault Admin Dashboard</p>
@@ -202,27 +200,15 @@ export default function AdminPage() {
             <div className={styles.table}>
               <div className={styles.thead}>
                 <span>Title</span>
-                <span>Category</span>
-                <span>Platform</span>
                 <span>Likes</span>
                 <span>Copies</span>
                 <span>Featured</span>
                 <span>Actions</span>
               </div>
               {filteredPrompts.map(p => {
-                const plat = PLATFORM_META[p.platform];
-                const cat  = MOCK_CATEGORIES.find(c => c.slug === p.category);
                 return (
                   <div key={p.id} className={styles.trow}>
                     <span className={styles.tTitle}>{p.title}</span>
-                    <span>
-                      {cat ? <span>{cat.icon} {cat.name}</span> : p.category}
-                    </span>
-                    <span>
-                      <span className={`badge`} style={{ background: `${plat?.color}20`, color: plat?.color, border: `1px solid ${plat?.color}40` }}>
-                        {plat?.emoji} {plat?.label}
-                      </span>
-                    </span>
                     <span className={styles.statNum}><Heart size={12} /> {formatNumber(p.likes)}</span>
                     <span className={styles.statNum}><Copy size={12} /> {formatNumber(p.copies)}</span>
                     <span>
@@ -241,22 +227,6 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* ── Categories Tab ── */}
-        {tab === 'categories' && (
-          <div className={styles.catGrid}>
-            {MOCK_CATEGORIES.map(cat => (
-              <div key={cat.id} className={styles.catCard} style={{ '--cat-c': cat.color } as React.CSSProperties}>
-                <span className={styles.catIcon}>{cat.icon}</span>
-                <div>
-                  <div className={styles.catName}>{cat.name}</div>
-                  <div className={styles.catCount}>
-                    {prompts.filter(p => p.category === cat.slug).length} prompts
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
 
         {/* ── Analytics Tab ── */}
         {tab === 'analytics' && (
@@ -280,22 +250,6 @@ export default function AdminPage() {
                   <span className={styles.aVal}><Copy size={12} style={{ color: 'var(--accent)' }} /> {formatNumber(p.copies)}</span>
                 </div>
               ))}
-            </div>
-            <div className={styles.analyticsCard}>
-              <h3>Prompts by Platform</h3>
-              {Object.entries(PLATFORM_META).filter(([k]) => k !== 'all').map(([key, meta]) => {
-                const count = prompts.filter(p => p.platform === key).length;
-                const pct = Math.round((count / prompts.length) * 100);
-                return (
-                  <div key={key} className={styles.barRow}>
-                    <span className={styles.barLabel}>{meta.emoji} {meta.label}</span>
-                    <div className={styles.bar}>
-                      <div className={styles.barFill} style={{ width: `${pct}%`, background: meta.color }} />
-                    </div>
-                    <span className={styles.barCount}>{count}</span>
-                  </div>
-                );
-              })}
             </div>
           </div>
         )}
@@ -324,23 +278,6 @@ export default function AdminPage() {
                   placeholder="Full prompt text…"
                   rows={5}
                 />
-              </div>
-              <div className={styles.formRow}>
-                <div className={styles.formField}>
-                  <label>Category</label>
-                  <select className="input" value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
-                    <option value="">Select category</option>
-                    {MOCK_CATEGORIES.map(c => <option key={c.slug} value={c.slug}>{c.icon} {c.name}</option>)}
-                  </select>
-                </div>
-                <div className={styles.formField}>
-                  <label>Platform</label>
-                  <select className="input" value={form.platform} onChange={e => setForm(f => ({ ...f, platform: e.target.value }))}>
-                    {Object.entries(PLATFORM_META).filter(([k]) => k !== 'all').map(([k, v]) => (
-                      <option key={k} value={k}>{v.emoji} {v.label}</option>
-                    ))}
-                  </select>
-                </div>
               </div>
               <div className={styles.formField}>
                 <label>Image URL</label>

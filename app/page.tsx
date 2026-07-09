@@ -116,11 +116,7 @@ export default function HomePage() {
         <HeroSection />
 
         <FilterBar
-          activeCategory={filters.category}
-          activePlatform={filters.platform as Platform}
           activeSort={filters.sort}
-          onCategory={c => setFilter('category', c)}
-          onPlatform={p => setFilter('platform', p as FilterState['platform'])}
           onSort={s => setFilter('sort', s as SortOption)}
         />
 

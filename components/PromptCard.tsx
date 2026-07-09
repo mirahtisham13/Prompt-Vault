@@ -49,10 +49,6 @@ export default function PromptCard({ prompt, onOpenModal, onShare }: PromptCardP
         </div>
       )}
       <div className={styles.body}>
-        <div className={styles.meta}>
-          {category && <span className={`badge ${styles.catBadge}`} style={{ '--cat-color': category.color } as React.CSSProperties}>{category.icon} {category.name}</span>}
-          <span className={`badge ${styles.platformBadge}`} style={{ '--p-color': platform.color } as React.CSSProperties}>{platform.emoji} {platform.label}</span>
-        </div>
         <h3 className={styles.title}>{prompt.title}</h3>
         <div className={styles.textWrap}>
           <p className={styles.text}>{showFull ? prompt.text : truncated}</p>
