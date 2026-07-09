@@ -77,11 +77,22 @@ export default function AdminPage() {
       const { error } = await supabase.from('prompts').update(form).eq('id', editingId);
       if (!error) {
         setPrompts(prev => prev.map(p => p.id === editingId ? { ...p, ...form } : p));
+      } else {
+        alert('Failed to save changes: ' + error.message);
       }
     } else {
-      const { data, error } = await supabase.from('prompts').insert([{ ...form }]).select().single();
+      const newPrompt = {
+        ...form,
+        id: crypto.randomUUID(),
+        likes: 0,
+        copies: 0,
+        created_at: new Date().toISOString(),
+      };
+      const { data, error } = await supabase.from('prompts').insert([newPrompt]).select().single();
       if (!error && data) {
         setPrompts(prev => [data as Prompt, ...prev]);
+      } else if (error) {
+        alert('Failed to add prompt: ' + error.message);
       }
     }
     setShowForm(false);
