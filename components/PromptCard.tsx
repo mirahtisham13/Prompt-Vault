@@ -28,7 +28,20 @@ export default function PromptCard({ prompt, onOpenModal, onShare }: PromptCardP
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setLiked(prev => { const next = !prev; setLikes(l => next ? l + 1 : l - 1); if (next) toast('Added to favorites! ❤️'); return next; });
+    setLiked(prev => { 
+      const next = !prev; 
+      setLikes(l => next ? l + 1 : l - 1); 
+      if (next) toast('Added to favorites! ❤️'); 
+      
+      // Ping API to track like
+      fetch('/api/track-like', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ promptId: prompt.id, action: next ? 'like' : 'unlike' })
+      }).catch(console.error);
+
+      return next; 
+    });
   };
 
   const handleCopy = async (e: React.MouseEvent) => {

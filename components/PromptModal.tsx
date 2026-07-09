@@ -65,7 +65,22 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
           </div>
           <div className={styles.actions}>
             <button className={`btn btn-primary ${styles.copyBtn}`} onClick={handleCopy}>{copied ? <><CheckCircle size={16} /> Copied!</> : <><Copy size={16} /> Copy Prompt</>}</button>
-            <button className={`btn btn-ghost ${styles.likeBtn} ${liked ? styles.liked : ''}`} onClick={() => setLiked(p => !p)}><Heart size={16} fill={liked ? 'currentColor' : 'none'} /></button>
+            <button 
+              className={`btn btn-ghost ${styles.likeBtn} ${liked ? styles.liked : ''}`} 
+              onClick={() => {
+                setLiked(p => {
+                  const next = !p;
+                  fetch('/api/track-like', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ promptId: prompt.id, action: next ? 'like' : 'unlike' })
+                  }).catch(console.error);
+                  return next;
+                });
+              }}
+            >
+              <Heart size={16} fill={liked ? 'currentColor' : 'none'} />
+            </button>
             <button className="btn btn-ghost" onClick={() => onShare(prompt)}><Share2 size={16} /></button>
           </div>
         </div>

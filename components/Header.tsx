@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Search, Zap, X, Shield } from 'lucide-react';
+import { Search, Zap, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import styles from './Header.module.css';
 interface HeaderProps { onSearch: (q: string) => void; searchValue: string; }
@@ -30,7 +30,6 @@ export default function Header({ onSearch, searchValue }: HeaderProps) {
         <div className={styles.actions}>
           <button className={`${styles.iconBtn} hide-desktop`} onClick={() => setShowSearch(s => !s)} aria-label="Search"><Search size={18} /></button>
           <ThemeToggle />
-          <Link href="/admin" className={`btn btn-ghost ${styles.adminBtn}`}><Shield size={15} /><span className="hide-mobile">Admin</span></Link>
         </div>
       </div>
       {showSearch && (
