@@ -9,7 +9,7 @@ import PromptModal from '@/components/PromptModal';
 import ShareModal from '@/components/ShareModal';
 import { Prompt, FilterState, SortOption } from '@/lib/types';
 import { Platform } from '@/lib/utils';
-import { MOCK_PROMPTS } from '@/lib/mockData';
+import { supabase } from '@/lib/supabase';
 import { Loader2 } from 'lucide-react';
 import styles from './page.module.css';
 
@@ -66,13 +66,19 @@ export default function HomePage() {
     tags: [],
   });
 
-  // Simulate loading from API (swap with real Supabase call)
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setPrompts(MOCK_PROMPTS);
+    const fetchPrompts = async () => {
+      const { data, error } = await supabase
+        .from('prompts')
+        .select('*')
+        .order('created_at', { ascending: false });
+        
+      if (!error && data) {
+        setPrompts(data as Prompt[]);
+      }
       setLoading(false);
-    }, 900);
-    return () => clearTimeout(timer);
+    };
+    fetchPrompts();
   }, []);
 
   const filtered = useMemo(() => applyFilters(prompts, filters), [prompts, filters]);

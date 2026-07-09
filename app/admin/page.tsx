@@ -23,7 +23,7 @@ export default function AdminPage() {
   const router = useRouter();
   const [authed, setAuthed] = useState(false);
   const [tab, setTab] = useState<Tab>('prompts');
-  const [prompts, setPrompts] = useState<Prompt[]>(MOCK_PROMPTS);
+  const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ ...EMPTY_PROMPT });
@@ -32,12 +32,17 @@ export default function AdminPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuthAndFetch = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) router.push('/admin/login');
-      else setAuthed(true);
+      if (!session) {
+        router.push('/admin/login');
+        return;
+      }
+      setAuthed(true);
+      const { data } = await supabase.from('prompts').select('*').order('created_at', { ascending: false });
+      if (data) setPrompts(data as Prompt[]);
     };
-    checkAuth();
+    checkAuthAndFetch();
   }, [router]);
 
   if (!authed) return null;
@@ -66,25 +71,27 @@ export default function AdminPage() {
     setShowForm(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.title || !form.text) return;
     if (editingId) {
-      setPrompts(prev => prev.map(p => p.id === editingId ? { ...p, ...form } : p));
+      const { error } = await supabase.from('prompts').update(form).eq('id', editingId);
+      if (!error) {
+        setPrompts(prev => prev.map(p => p.id === editingId ? { ...p, ...form } : p));
+      }
     } else {
-      const newPrompt: Prompt = {
-        ...form,
-        id: crypto.randomUUID(),
-        likes: 0,
-        copies: 0,
-        created_at: new Date().toISOString(),
-      };
-      setPrompts(prev => [newPrompt, ...prev]);
+      const { data, error } = await supabase.from('prompts').insert([{ ...form }]).select().single();
+      if (!error && data) {
+        setPrompts(prev => [data as Prompt, ...prev]);
+      }
     }
     setShowForm(false);
   };
 
-  const handleDelete = (id: string) => {
-    setPrompts(prev => prev.filter(p => p.id !== id));
+  const handleDelete = async (id: string) => {
+    const { error } = await supabase.from('prompts').delete().eq('id', id);
+    if (!error) {
+      setPrompts(prev => prev.filter(p => p.id !== id));
+    }
     setDeleteId(null);
   };
 
