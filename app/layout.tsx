@@ -18,6 +18,20 @@ export const metadata: Metadata = {
     title: 'PromptBytes — The Ultimate AI Prompt Library',
     description: 'Thousands of premium AI prompts for every platform. Free forever.',
     siteName: 'PromptBytes',
+    images: [
+      {
+        url: '/api/og?title=The%20Ultimate%20AI%20Prompt%20Library&platform=PromptBytes',
+        width: 1200,
+        height: 630,
+        alt: 'PromptBytes',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PromptBytes — The Ultimate AI Prompt Library',
+    description: 'Thousands of premium AI prompts for every platform. Free forever.',
+    images: ['/api/og?title=The%20Ultimate%20AI%20Prompt%20Library&platform=PromptBytes'],
   },
 };
 
