@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | PromptVault',
-  description: 'Privacy Policy for PromptVault.',
+  title: 'Privacy Policy | PromptBytes',
+  description: 'Privacy Policy for PromptBytes.',
 };
 
 export default function PrivacyPolicyPage() {
@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
         <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>Last updated: July 12, 2026</p>
 
         <p style={{ fontSize: '16px', lineHeight: '1.7', color: 'var(--text-secondary)' }}>
-          At PromptVault, your privacy is important to us. This Privacy Policy outlines how we collect, use, and protect your information when you use our website.
+          At PromptBytes, your privacy is important to us. This Privacy Policy outlines how we collect, use, and protect your information when you use our website.
         </p>
         
         <h2 style={{ fontSize: '20px', marginTop: '16px', color: 'var(--text-primary)' }}>1. Information We Collect</h2>
@@ -39,7 +39,7 @@ export default function PrivacyPolicyPage() {
 
         <h2 style={{ fontSize: '20px', marginTop: '16px', color: 'var(--text-primary)' }}>5. Contact Us</h2>
         <p style={{ fontSize: '16px', lineHeight: '1.7', color: 'var(--text-secondary)' }}>
-          If you have any questions or concerns about this Privacy Policy, please feel free to reach out to us at support@promptvault.example.com.
+          If you have any questions or concerns about this Privacy Policy, please feel free to reach out to us at support@promptbytes.example.com.
         </p>
       </div>
     </div>

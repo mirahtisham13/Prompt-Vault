@@ -15,21 +15,21 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     .single();
 
   if (!prompt) {
-    return { title: 'Prompt Not Found - PromptVault' };
+    return { title: 'Prompt Not Found - PromptBytes' };
   }
 
   const { truncated } = truncateText(prompt.text, 120);
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://promptvault.app';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://promptbytes.app';
   const imageUrl = prompt.image_url || `${baseUrl}/og-default.png`; // Fallback image
 
   return {
-    title: `${prompt.title} | PromptVault`,
+    title: `${prompt.title} | PromptBytes`,
     description: truncated,
     openGraph: {
-      title: `${prompt.title} | PromptVault`,
+      title: `${prompt.title} | PromptBytes`,
       description: truncated,
       url: `${baseUrl}/prompt/${prompt.id}`,
-      siteName: 'PromptVault',
+      siteName: 'PromptBytes',
       images: [
         {
           url: imageUrl,
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${prompt.title} | PromptVault`,
+      title: `${prompt.title} | PromptBytes`,
       description: truncated,
       images: [imageUrl],
     },

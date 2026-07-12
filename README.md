@@ -1,4 +1,4 @@
-# PromptVault ⚡
+# PromptBytes ⚡
 
 **The world's best AI prompt library.** A premium, open-source prompt discovery platform for Gemini, ChatGPT, Midjourney, DALL·E, Claude, Stable Diffusion, Sora, and Runway.
 

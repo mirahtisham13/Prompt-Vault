@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Admin Login — PromptVault',
+  title: 'Admin Login — PromptBytes',
   robots: 'noindex',
 };
 

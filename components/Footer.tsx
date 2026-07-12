@@ -10,7 +10,7 @@ export default function Footer() {
       <div className={`container ${styles.inner}`}>
         <Link href="/" className={styles.logo}>
           <span className={styles.logoIcon}><Zap size={15} strokeWidth={2.5} /></span>
-          <span className={styles.logoText}>Prompt<span className="gradient-text">Vault</span></span>
+          <span className={styles.logoText}>Prompt<span className="gradient-text">Bytes</span></span>
         </Link>
         
         <div className={styles.links}>
@@ -21,7 +21,7 @@ export default function Footer() {
       </div>
       
       <div className={styles.copyright}>
-        &copy; {currentYear} PromptVault. All rights reserved.
+        &copy; {currentYear} PromptBytes. All rights reserved.
       </div>
     </footer>
   );

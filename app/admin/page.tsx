@@ -177,7 +177,7 @@ export default function AdminPage() {
       <aside className={styles.sidebar}>
         <Link href="/" className={styles.sidebarLogo}>
           <span className={styles.logoIcon}><Zap size={18} /></span>
-          <span>PromptVault</span>
+          <span>PromptBytes</span>
         </Link>
 
         <nav className={styles.nav}>
@@ -209,7 +209,7 @@ export default function AdminPage() {
               {tab === 'prompts' && 'Manage Prompts'}
               {tab === 'analytics' && 'Analytics'}
             </h1>
-            <p className={styles.pageSubtitle}>PromptVault Admin Dashboard</p>
+            <p className={styles.pageSubtitle}>PromptBytes Admin Dashboard</p>
           </div>
           {tab === 'prompts' && (
             <button className="btn btn-primary" onClick={openNew}>

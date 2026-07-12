@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
         <div className={styles.header}>
           <div className={styles.lockIcon}><Lock size={20} /></div>
           <h1 className={styles.title}>Admin Login</h1>
-          <p className={styles.subtitle}>Access the PromptVault control panel</p>
+          <p className={styles.subtitle}>Access the PromptBytes control panel</p>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
               className={`input ${styles.input}`}
               value={email}
               onChange={e => setEmail(e.target.value)}
-              placeholder="admin@promptvault.app"
+              placeholder="admin@promptbytes.app"
               required
               autoComplete="email"
             />

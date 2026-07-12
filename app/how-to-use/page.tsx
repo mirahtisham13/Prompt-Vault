@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'How to Use | PromptVault',
-  description: 'Learn how to use PromptVault to get the best results from AI.',
+  title: 'How to Use | PromptBytes',
+  description: 'Learn how to use PromptBytes to get the best results from AI.',
 };
 
 export default function HowToUsePage() {
   return (
     <div className="container" style={{ padding: '60px 20px', maxWidth: '800px' }}>
-      <h1 style={{ fontSize: '36px', marginBottom: '24px' }} className="gradient-text">How to Use PromptVault</h1>
+      <h1 style={{ fontSize: '36px', marginBottom: '24px' }} className="gradient-text">How to Use PromptBytes</h1>
       
       <div className="card" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
         

@@ -5,15 +5,15 @@ import { ToastProvider } from '@/components/ToastProvider';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'PromptVault — The Ultimate AI Prompt Library',
+  title: 'PromptBytes — The Ultimate AI Prompt Library',
   description: 'Discover thousands of hand-curated AI prompts for Gemini, ChatGPT, Midjourney, DALL·E, Claude, Stable Diffusion and more. Copy, like, and share the best prompts for free.',
   keywords: 'AI prompts, prompt library, Gemini prompts, ChatGPT prompts, Midjourney prompts',
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   openGraph: {
     type: 'website',
-    title: 'PromptVault — The Ultimate AI Prompt Library',
+    title: 'PromptBytes — The Ultimate AI Prompt Library',
     description: 'Thousands of premium AI prompts for every platform. Free forever.',
-    siteName: 'PromptVault',
+    siteName: 'PromptBytes',
   },
 };
 

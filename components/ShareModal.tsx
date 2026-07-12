@@ -14,7 +14,7 @@ export default function ShareModal({ prompt, onClose }: ShareModalProps) {
   const isOpen = !!prompt;
   if (!isOpen) return null;
 
-  const pageUrl = typeof window !== 'undefined' ? `${window.location.origin}/prompt/${prompt.id}` : `https://promptvault.app/prompt/${prompt.id}`;
+  const pageUrl = typeof window !== 'undefined' ? `${window.location.origin}/prompt/${prompt.id}` : `https://promptbytes.app/prompt/${prompt.id}`;
   const urls = getShareUrls(pageUrl, prompt.text);
 
   const handleCopyLink = async () => {

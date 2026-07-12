@@ -20,7 +20,7 @@ export default function Header({ onSearch, searchValue }: HeaderProps) {
       <div className={`container ${styles.inner}`}>
         <Link href="/" className={styles.logo}>
           <span className={styles.logoIcon}><Zap size={18} strokeWidth={2.5} /></span>
-          <span className={styles.logoText}>Prompt<span className="gradient-text">Vault</span></span>
+          <span className={styles.logoText}>Prompt<span className="gradient-text">Bytes</span></span>
         </Link>
         <div className={styles.searchWrap}>
           <Search size={15} className={styles.searchIcon} />
