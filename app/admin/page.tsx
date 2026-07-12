@@ -33,7 +33,6 @@ export default function AdminPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     const checkAuthAndFetch = async () => {
@@ -75,42 +74,6 @@ export default function AdminPage() {
     setTagInput('');
     setImageFile(null);
     setShowForm(true);
-  };
-
-  const handleGeneratePrompt = async () => {
-    if (!imageFile) return;
-    setIsGenerating(true);
-    try {
-      const reader = new FileReader();
-      reader.readAsDataURL(imageFile);
-      reader.onload = async () => {
-        const base64 = reader.result as string;
-        try {
-          const res = await fetch('/api/analyze-image', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ imageBase64: base64, mimeType: imageFile.type })
-          });
-          
-          const data = await res.json();
-          if (res.ok) {
-            setForm(f => ({ ...f, title: data.title || f.title, text: data.promptText || f.text }));
-          } else {
-            alert('Error: ' + data.error);
-          }
-        } catch (err: any) {
-          alert('Error generating prompt: ' + err.message);
-        }
-        setIsGenerating(false);
-      };
-      reader.onerror = () => {
-        alert('Failed to read image file');
-        setIsGenerating(false);
-      };
-    } catch (err: any) {
-      alert('Error: ' + err.message);
-      setIsGenerating(false);
-    }
   };
 
   const handleSave = async () => {
@@ -391,16 +354,6 @@ export default function AdminPage() {
                   <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>OR</span>
                   <input type="file" accept="image/*" onChange={e => { if (e.target.files?.[0]) { setImageFile(e.target.files[0]); setForm(f => ({ ...f, image_url: '' })); } }} style={{ width: '180px', fontSize: '12px' }} />
                 </div>
-                {imageFile && (
-                  <button 
-                    className="btn btn-primary" 
-                    onClick={handleGeneratePrompt} 
-                    disabled={isGenerating}
-                    style={{ marginTop: '8px', width: 'fit-content', background: 'linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%)', border: 'none' }}
-                  >
-                    ✨ {isGenerating ? 'Analyzing Image...' : 'Auto-Generate Prompt from Image'}
-                  </button>
-                )}
               </div>
               <div className={styles.formField}>
                 <label>Tags</label>
