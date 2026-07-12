@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { ToastProvider } from '@/components/ToastProvider';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'PromptVault — The Ultimate AI Prompt Library',
@@ -25,7 +26,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider>
           <ToastProvider>
-            {children}
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+              <div style={{ flex: 1 }}>
+                {children}
+              </div>
+              <Footer />
+            </div>
           </ToastProvider>
         </ThemeProvider>
       </body>
