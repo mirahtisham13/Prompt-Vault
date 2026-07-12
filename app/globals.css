@@ -60,7 +60,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 body {
   font-family: 'Inter', system-ui, sans-serif;
   background-color: var(--bg-primary);
@@ -124,7 +124,11 @@ input, textarea, select { font-family: inherit; }
 .modal-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; visibility: hidden; transition: opacity var(--duration-base) var(--ease-out), visibility var(--duration-base) var(--ease-out); }
 .modal-overlay.open { opacity: 1; visibility: visible; }
 .modal-overlay.open .modal-box { transform: scale(1) translateY(0); opacity: 1; }
-.modal-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); transform: scale(0.94) translateY(20px); opacity: 0; transition: transform var(--duration-slow) var(--ease-spring), opacity var(--duration-slow) var(--ease-out); max-height: 90vh; overflow-y: auto; }
+.modal-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); transform: scale(0.94) translateY(20px); opacity: 0; transition: transform var(--duration-slow) var(--ease-spring), opacity var(--duration-slow) var(--ease-out); max-height: 90vh; overflow-y: auto; width: 100%; }
+@media (max-width: 640px) {
+  .modal-overlay { padding: 12px; align-items: flex-end; }
+  .modal-box { border-bottom-left-radius: 0; border-bottom-right-radius: 0; max-height: 92vh; }
+}
 
 .gradient-text { background: var(--grad-brand); background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientShift 4s ease infinite; }
 
