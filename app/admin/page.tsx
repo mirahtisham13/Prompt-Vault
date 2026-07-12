@@ -11,6 +11,7 @@ import { MOCK_PROMPTS, MOCK_CATEGORIES } from '@/lib/mockData';
 import { supabase } from '@/lib/supabase';
 import { PLATFORM_META, formatNumber } from '@/lib/utils';
 import styles from './admin.module.css';
+import imageCompression from 'browser-image-compression';
 
 type Tab = 'prompts' | 'categories' | 'analytics';
 
@@ -81,8 +82,20 @@ export default function AdminPage() {
 
     let finalImageUrl = form.image_url;
     if (imageFile) {
+      let fileToUpload = imageFile;
+      try {
+        const options = {
+          maxSizeMB: 0.15, // Compress to ~150KB max
+          maxWidthOrHeight: 1920,
+          useWebWorker: true,
+        };
+        fileToUpload = await imageCompression(imageFile, options);
+      } catch (error) {
+        console.error('Error compressing image:', error);
+      }
+
       const formData = new FormData();
-      formData.append('file', imageFile);
+      formData.append('file', fileToUpload);
 
       try {
         const res = await fetch('/api/upload-image', {
