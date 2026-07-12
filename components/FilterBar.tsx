@@ -19,15 +19,12 @@ export default function FilterBar({ activeSort, onSort }: FilterBarProps) {
   return (
     <div className={styles.wrapper}>
       <div className={`container ${styles.inner}`}>
-        <div className={styles.section}>
-          <span className={styles.label}>Sort By</span>
-          <div className={styles.sortSelect}>
-            {SORT_OPTIONS.map(({ value, label, Icon }) => (
-              <button key={value} className={`${styles.sortBtn} ${activeSort === value ? styles.sortActive : ''}`} onClick={() => onSort(value)}>
-                <Icon size={13} /><span>{label}</span>
-              </button>
-            ))}
-          </div>
+        <div className={styles.sortSelect}>
+          {SORT_OPTIONS.map(({ value, label, Icon }) => (
+            <button key={value} className={`${styles.sortBtn} ${activeSort === value ? styles.sortActive : ''}`} onClick={() => onSort(value)}>
+              <Icon size={13} /><span>{label}</span>
+            </button>
+          ))}
         </div>
       </div>
     </div>
