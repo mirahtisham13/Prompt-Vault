@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { X, Copy, CheckCircle, Heart, Star, Share2, Maximize2 } from 'lucide-react';
 import { Prompt } from '@/lib/types';
 import { MOCK_CATEGORIES } from '@/lib/mockData';
@@ -15,7 +15,16 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
   const [copied, setCopied] = useState(false);
   const [liked, setLiked] = useState(false);
   const [imgExpanded, setImgExpanded] = useState(false);
+  const [textExpanded, setTextExpanded] = useState(false);
   const isOpen = !!prompt;
+
+  // Reset states when modal opens/closes
+  useEffect(() => {
+    if (!isOpen) {
+      setImgExpanded(false);
+      setTextExpanded(false);
+    }
+  }, [isOpen]);
 
   const handleCopy = async () => {
     if (!prompt) return;
@@ -53,10 +62,19 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
             {prompt.is_featured && <span className={`badge ${styles.featuredBadge}`}><Star size={10} fill="currentColor" /> Featured</span>}
           </div>
           <h2 className={styles.title}>{prompt.title}</h2>
-          <div className={styles.promptBox}>
+          <div 
+            className={`${styles.promptBox} ${textExpanded ? styles.expandedText : ''}`} 
+            onClick={() => setTextExpanded(p => !p)}
+            title="Tap to expand text"
+          >
             <p className={styles.promptText}>
               <PromptFormatter text={prompt.text} />
             </p>
+            {!textExpanded && (
+              <div className={styles.textFade}>
+                <span className={styles.textExpandHint}>Tap to read more</span>
+              </div>
+            )}
           </div>
           {prompt.tags?.length > 0 && <div className={styles.tags}>{prompt.tags.map(tag => <span key={tag} className={styles.tag}>#{tag}</span>)}</div>}
           <div className={styles.stats}>
