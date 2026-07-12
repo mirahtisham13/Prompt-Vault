@@ -7,7 +7,9 @@ export default function ThemeToggle() {
   return (
     <button className={styles.toggle} onClick={toggle} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
       <span className={styles.track}>
-        <span className={styles.thumb}>{theme === 'dark' ? <Moon size={12} /> : <Sun size={12} />}</span>
+        <span className={styles.thumb}>
+          {theme === 'dark' ? <Moon size={12} /> : <Sun size={12} />}
+        </span>
       </span>
     </button>
   );

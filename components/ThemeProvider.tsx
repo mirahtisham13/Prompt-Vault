@@ -6,8 +6,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark');
   useEffect(() => {
     const stored = localStorage.getItem('pv-theme') as Theme | null;
-    const sys = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-    const initial = stored || sys;
+    // Always default to dark unless user has explicitly chosen light before
+    const initial = stored ?? 'dark';
     setTheme(initial);
     document.documentElement.setAttribute('data-theme', initial);
   }, []);
