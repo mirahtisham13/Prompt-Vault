@@ -162,14 +162,6 @@ export default function HomePage() {
         )}
       </main>
 
-      <footer className={styles.footer}>
-        <div className="container">
-          <p>
-            <strong className="gradient-text">PromptVault</strong> — The world&apos;s best AI prompt library. Free forever.
-          </p>
-        </div>
-      </footer>
-
       <PromptModal
         prompt={activeModal}
         onClose={() => setActiveModal(null)}
