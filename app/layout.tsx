@@ -8,7 +8,11 @@ export const metadata: Metadata = {
   title: 'PromptBytes — The Ultimate AI Prompt Library',
   description: 'Discover thousands of hand-curated AI prompts for Gemini, ChatGPT, Midjourney, DALL·E, Claude, Stable Diffusion and more. Copy, like, and share the best prompts for free.',
   keywords: 'AI prompts, prompt library, Gemini prompts, ChatGPT prompts, Midjourney prompts',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL 
+    ? process.env.NEXT_PUBLIC_APP_URL 
+    : process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'https://promptbytes.app'),
   openGraph: {
     type: 'website',
     title: 'PromptBytes — The Ultimate AI Prompt Library',

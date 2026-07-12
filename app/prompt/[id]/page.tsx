@@ -19,7 +19,11 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
   }
 
   const { truncated } = truncateText(prompt.text, 120);
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://promptbytes.app';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL 
+    ? process.env.NEXT_PUBLIC_SITE_URL 
+    : process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'https://promptbytes.app';
   
   const ogParams = new URLSearchParams();
   ogParams.set('title', prompt.title);
