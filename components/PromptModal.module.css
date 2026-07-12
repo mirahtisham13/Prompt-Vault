@@ -11,6 +11,13 @@
 .catBadge { background: color-mix(in srgb, var(--cat-color, var(--primary)) 12%, transparent); color: var(--cat-color, var(--primary)); border: 1px solid color-mix(in srgb, var(--cat-color, var(--primary)) 25%, transparent); }
 .platBadge { background: color-mix(in srgb, var(--p-color, var(--primary)) 12%, transparent); color: var(--p-color, var(--primary)); border: 1px solid color-mix(in srgb, var(--p-color, var(--primary)) 25%, transparent); }
 .title { font-size: 22px; font-weight: 800; line-height: 1.25; }
+
+.variablesBox { background: var(--bg-primary); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.varTitle { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary-light); }
+.varList { display: flex; flex-direction: column; gap: 10px; }
+.varField { display: flex; flex-direction: column; gap: 6px; }
+.varLabel { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+.varInput { font-size: 14px; padding: 8px 12px; height: auto; }
 .promptBox { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; max-height: 180px; overflow-y: hidden; cursor: pointer; position: relative; transition: max-height 0.3s var(--ease-out); }
 .expandedText { max-height: 800px; overflow-y: auto; }
 .textFade { position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(to bottom, transparent, var(--bg-input) 80%); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px; pointer-events: none; }

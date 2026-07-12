@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { X, Copy, CheckCircle, Heart, Star, Share2, Maximize2 } from 'lucide-react';
 import { Prompt } from '@/lib/types';
 import { MOCK_CATEGORIES } from '@/lib/mockData';
@@ -16,20 +16,40 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
   const [liked, setLiked] = useState(false);
   const [imgExpanded, setImgExpanded] = useState(false);
   const [textExpanded, setTextExpanded] = useState(false);
+  const [varValues, setVarValues] = useState<Record<string, string>>({});
   const isOpen = !!prompt;
+
+  const variables = useMemo(() => {
+    if (!prompt) return [];
+    const matches = prompt.text.match(/\[([^\]]+)\]/g);
+    if (!matches) return [];
+    return Array.from(new Set(matches.map(m => m.slice(1, -1))));
+  }, [prompt]);
 
   // Reset states when modal opens/closes
   useEffect(() => {
     if (!isOpen) {
       setImgExpanded(false);
       setTextExpanded(false);
+      setVarValues({});
     }
   }, [isOpen]);
+
+  const getFinalText = () => {
+    if (!prompt) return '';
+    let text = prompt.text;
+    variables.forEach(v => {
+      if (varValues[v]) {
+        text = text.replaceAll(`[${v}]`, varValues[v]);
+      }
+    });
+    return text;
+  };
 
   const handleCopy = async () => {
     if (!prompt) return;
     try { 
-      await copyToClipboard(prompt.text); 
+      await copyToClipboard(getFinalText()); 
       setCopied(true); 
       toast('Prompt copied! ✨'); 
       setTimeout(() => setCopied(false), 2500); 
@@ -62,13 +82,34 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
             {prompt.is_featured && <span className={`badge ${styles.featuredBadge}`}><Star size={10} fill="currentColor" /> Featured</span>}
           </div>
           <h2 className={styles.title}>{prompt.title}</h2>
+          
+          {variables.length > 0 && (
+            <div className={styles.variablesBox}>
+              <h3 className={styles.varTitle}>Customize Prompt</h3>
+              <div className={styles.varList}>
+                {variables.map(v => (
+                  <div key={v} className={styles.varField}>
+                    <label className={styles.varLabel}>{v}</label>
+                    <input 
+                      type="text" 
+                      className={`input ${styles.varInput}`} 
+                      placeholder={`Enter ${v.toLowerCase()}...`}
+                      value={varValues[v] || ''}
+                      onChange={e => setVarValues(p => ({ ...p, [v]: e.target.value }))}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div 
             className={`${styles.promptBox} ${textExpanded ? styles.expandedText : ''}`} 
             onClick={() => setTextExpanded(p => !p)}
             title="Tap to expand text"
           >
             <p className={styles.promptText}>
-              <PromptFormatter text={prompt.text} />
+              <PromptFormatter text={prompt.text} values={varValues} />
             </p>
             {!textExpanded && (
               <div className={styles.textFade}>

@@ -20,7 +20,14 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
   const { truncated } = truncateText(prompt.text, 120);
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://promptbytes.app';
-  const imageUrl = prompt.image_url || `${baseUrl}/og-default.png`; // Fallback image
+  
+  const ogParams = new URLSearchParams();
+  ogParams.set('title', prompt.title);
+  ogParams.set('platform', prompt.platform);
+  if (prompt.image_url) {
+    ogParams.set('image', prompt.image_url);
+  }
+  const imageUrl = `${baseUrl}/api/og?${ogParams.toString()}`;
 
   return {
     title: `${prompt.title} | PromptBytes`,
