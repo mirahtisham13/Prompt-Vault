@@ -12,12 +12,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.setAttribute('data-theme', initial);
   }, []);
   const toggle = () => {
-    setTheme(prev => {
-      const next = prev === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('pv-theme', next);
-      document.documentElement.setAttribute('data-theme', next);
-      return next;
-    });
+    const next: Theme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    localStorage.setItem('pv-theme', next);
+    document.documentElement.setAttribute('data-theme', next);
   };
   return <ThemeCtx.Provider value={{ theme, toggle }}>{children}</ThemeCtx.Provider>;
 }
