@@ -18,7 +18,7 @@ export const MOCK_PROMPTS: Prompt[] = [
     category: 'art', platform: 'midjourney',
     tags: ['cyberpunk', 'city', 'neon', 'sci-fi', 'night'],
     image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80',
-    likes: 1284, copies: 3421, is_featured: true, created_at: new Date(Date.now() - 86400000).toISOString(),
+    likes: 1284, copies: 3421, is_premium: true, created_at: new Date(Date.now() - 86400000).toISOString(),
   },
   {
     id: '2', title: 'Python FastAPI Expert',
@@ -26,7 +26,7 @@ export const MOCK_PROMPTS: Prompt[] = [
     category: 'coding', platform: 'chatgpt',
     tags: ['python', 'fastapi', 'backend', 'api', 'jwt'],
     image_url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80',
-    likes: 892, copies: 2100, is_featured: true, created_at: new Date(Date.now() - 172800000).toISOString(),
+    likes: 892, copies: 2100, is_premium: true, created_at: new Date(Date.now() - 172800000).toISOString(),
   },
   {
     id: '3', title: 'Enchanted Forest Portrait',
@@ -34,7 +34,7 @@ export const MOCK_PROMPTS: Prompt[] = [
     category: 'photo', platform: 'dalle',
     tags: ['portrait', 'fantasy', 'forest', 'magical', 'ethereal'],
     image_url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
-    likes: 2156, copies: 4890, is_featured: true, created_at: new Date(Date.now() - 259200000).toISOString(),
+    likes: 2156, copies: 4890, is_premium: true, created_at: new Date(Date.now() - 259200000).toISOString(),
   },
   {
     id: '4', title: 'Viral Product Launch Email',
@@ -42,7 +42,7 @@ export const MOCK_PROMPTS: Prompt[] = [
     category: 'marketing', platform: 'gemini',
     tags: ['email', 'saas', 'marketing', 'copywriting', 'launch'],
     image_url: 'https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80',
-    likes: 743, copies: 1890, is_featured: false, created_at: new Date(Date.now() - 345600000).toISOString(),
+    likes: 743, copies: 1890, is_premium: false, created_at: new Date(Date.now() - 345600000).toISOString(),
   },
   {
     id: '5', title: 'Brutalist Architecture Interior',
@@ -50,7 +50,7 @@ export const MOCK_PROMPTS: Prompt[] = [
     category: 'art', platform: 'stable-diffusion',
     tags: ['brutalist', 'interior', 'architecture', 'luxury', 'concrete'],
     image_url: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
-    likes: 567, copies: 1234, is_featured: false, created_at: new Date(Date.now() - 432000000).toISOString(),
+    likes: 567, copies: 1234, is_premium: false, created_at: new Date(Date.now() - 432000000).toISOString(),
   },
   {
     id: '6', title: 'Sci-Fi Novel Chapter Writer',
@@ -58,7 +58,7 @@ export const MOCK_PROMPTS: Prompt[] = [
     category: 'writing', platform: 'claude',
     tags: ['sci-fi', 'novel', 'writing', 'space', 'creative'],
     image_url: 'https://images.unsplash.com/photo-1462332420958-a05d1e002413?w=800&q=80',
-    likes: 1456, copies: 2800, is_featured: true, created_at: new Date(Date.now() - 518400000).toISOString(),
+    likes: 1456, copies: 2800, is_premium: true, created_at: new Date(Date.now() - 518400000).toISOString(),
   },
   {
     id: '7', title: 'Cinematic Ocean Drone Shot',
@@ -66,7 +66,7 @@ export const MOCK_PROMPTS: Prompt[] = [
     category: 'video', platform: 'sora',
     tags: ['drone', 'ocean', 'cinematic', 'sunrise', 'nature'],
     image_url: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80',
-    likes: 3201, copies: 5600, is_featured: true, created_at: new Date(Date.now() - 604800000).toISOString(),
+    likes: 3201, copies: 5600, is_premium: true, created_at: new Date(Date.now() - 604800000).toISOString(),
   },
   {
     id: '8', title: 'Lo-Fi Music Generator',
@@ -74,7 +74,7 @@ export const MOCK_PROMPTS: Prompt[] = [
     category: 'music', platform: 'gemini',
     tags: ['lofi', 'music', 'hip-hop', 'production', 'chill'],
     image_url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80',
-    likes: 891, copies: 1567, is_featured: false, created_at: new Date(Date.now() - 691200000).toISOString(),
+    likes: 891, copies: 1567, is_premium: false, created_at: new Date(Date.now() - 691200000).toISOString(),
   },
   {
     id: '9', title: 'VC Pitch Deck Analyzer',
@@ -82,7 +82,7 @@ export const MOCK_PROMPTS: Prompt[] = [
     category: 'business', platform: 'chatgpt',
     tags: ['startup', 'pitchdeck', 'vc', 'fundraising', 'business'],
     image_url: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&q=80',
-    likes: 2341, copies: 4200, is_featured: true, created_at: new Date(Date.now() - 777600000).toISOString(),
+    likes: 2341, copies: 4200, is_premium: true, created_at: new Date(Date.now() - 777600000).toISOString(),
   },
   {
     id: '10', title: 'Watercolor Galaxy Portrait',
@@ -90,7 +90,7 @@ export const MOCK_PROMPTS: Prompt[] = [
     category: 'art', platform: 'midjourney',
     tags: ['watercolor', 'galaxy', 'portrait', 'space', 'painting'],
     image_url: 'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=800&q=80',
-    likes: 4521, copies: 7800, is_featured: true, created_at: new Date(Date.now() - 864000000).toISOString(),
+    likes: 4521, copies: 7800, is_premium: true, created_at: new Date(Date.now() - 864000000).toISOString(),
   },
   {
     id: '11', title: 'React Architecture Advisor',
@@ -98,7 +98,7 @@ export const MOCK_PROMPTS: Prompt[] = [
     category: 'coding', platform: 'claude',
     tags: ['react', 'typescript', 'architecture', 'frontend', 'performance'],
     image_url: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80',
-    likes: 1678, copies: 3900, is_featured: false, created_at: new Date(Date.now() - 950400000).toISOString(),
+    likes: 1678, copies: 3900, is_premium: false, created_at: new Date(Date.now() - 950400000).toISOString(),
   },
   {
     id: '12', title: 'Bioluminescent Deep Sea',
@@ -106,6 +106,6 @@ export const MOCK_PROMPTS: Prompt[] = [
     category: 'photo', platform: 'dalle',
     tags: ['ocean', 'bioluminescent', 'deep-sea', 'nature', 'photography'],
     image_url: 'https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=800&q=80',
-    likes: 3892, copies: 6700, is_featured: true, created_at: new Date(Date.now() - 1036800000).toISOString(),
+    likes: 3892, copies: 6700, is_premium: true, created_at: new Date(Date.now() - 1036800000).toISOString(),
   },
 ];

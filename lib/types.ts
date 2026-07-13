@@ -19,7 +19,7 @@ export interface Prompt {
   image_url: string | null;
   likes: number;
   copies: number;
-  is_featured: boolean;
+  is_premium: boolean;
   created_at: string;
 }
 
@@ -31,7 +31,7 @@ export interface Category {
   color: string;
 }
 
-export type SortOption = 'newest' | 'most_liked' | 'most_copied' | 'featured';
+export type SortOption = 'newest' | 'most_liked' | 'most_copied' | 'premium';
 
 export interface FilterState {
   category: string;

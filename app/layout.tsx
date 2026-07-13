@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { ToastProvider } from '@/components/ToastProvider';
+import { AuthProvider } from '@/components/AuthProvider';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
@@ -43,14 +44,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ThemeProvider>
-          <ToastProvider>
-            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-              <div style={{ flex: 1 }}>
-                {children}
+          <AuthProvider>
+            <ToastProvider>
+              <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                <div style={{ flex: 1 }}>
+                  {children}
+                </div>
+                <Footer />
               </div>
-              <Footer />
-            </div>
-          </ToastProvider>
+            </ToastProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

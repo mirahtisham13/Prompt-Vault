@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Search, Zap, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import AuthButton from './AuthButton';
 import styles from './Header.module.css';
 interface HeaderProps { onSearch: (q: string) => void; searchValue: string; }
 export default function Header({ onSearch, searchValue }: HeaderProps) {
@@ -30,6 +31,7 @@ export default function Header({ onSearch, searchValue }: HeaderProps) {
         <div className={styles.actions}>
           <button className={`${styles.iconBtn} hide-desktop`} onClick={() => setShowSearch(s => !s)} aria-label="Search"><Search size={18} /></button>
           <ThemeToggle />
+          <AuthButton />
         </div>
       </div>
       {showSearch && (

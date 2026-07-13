@@ -7,7 +7,7 @@ const SORT_OPTIONS: { value: SortOption; label: string; Icon: React.ElementType 
   { value: 'newest',      label: 'Newest',      Icon: Clock },
   { value: 'most_liked',  label: 'Most Liked',  Icon: Heart },
   { value: 'most_copied', label: 'Most Copied', Icon: TrendingUp },
-  { value: 'featured',    label: 'Featured',    Icon: Star },
+  { value: 'premium',     label: 'Premium',     Icon: Star },
 ];
 
 interface FilterBarProps {

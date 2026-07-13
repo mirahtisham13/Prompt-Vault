@@ -17,7 +17,7 @@ type Tab = 'prompts' | 'categories' | 'analytics';
 
 const EMPTY_PROMPT: Omit<Prompt, 'id' | 'created_at' | 'likes' | 'copies'> = {
   title: '', text: '', category: '', platform: 'gemini',
-  tags: [], image_url: '', is_featured: false,
+  tags: [], image_url: '', is_premium: false,
 };
 
 export default function AdminPage() {
@@ -53,7 +53,7 @@ export default function AdminPage() {
   // ── Stats ──────────────────────────────────────────────────
   const totalLikes  = prompts.reduce((s, p) => s + p.likes, 0);
   const totalCopies = prompts.reduce((s, p) => s + p.copies, 0);
-  const featured    = prompts.filter(p => p.is_featured).length;
+  const premium     = prompts.filter(p => p.is_premium).length;
 
   // ── Form helpers ───────────────────────────────────────────
   const openNew = () => {
@@ -68,7 +68,7 @@ export default function AdminPage() {
     setForm({
       title: p.title, text: p.text, category: p.category,
       platform: p.platform, tags: [...p.tags], image_url: p.image_url ?? '',
-      is_featured: p.is_featured,
+      is_premium: p.is_premium,
     });
     setEditingId(p.id);
     setTagInput('');
@@ -237,7 +237,7 @@ export default function AdminPage() {
             { label: 'Total Prompts', value: prompts.length, icon: <Tag size={18} />, color: '#8b5cf6' },
             { label: 'Total Likes',   value: formatNumber(totalLikes),  icon: <Heart size={18} />, color: '#f43f5e' },
             { label: 'Total Copies',  value: formatNumber(totalCopies), icon: <Copy size={18} />,  color: '#06b6d4' },
-            { label: 'Featured',      value: featured, icon: <Star size={18} />, color: '#f59e0b' },
+            { label: 'Premium',       value: premium, icon: <Star size={18} />, color: '#8b5cf6' },
           ].map(s => (
             <div key={s.label} className={styles.statCard}>
               <span className={styles.statIcon} style={{ background: `${s.color}20`, color: s.color }}>
@@ -270,7 +270,7 @@ export default function AdminPage() {
                 <span>Title</span>
                 <span>Likes</span>
                 <span>Copies</span>
-                <span>Featured</span>
+                <span>Premium</span>
                 <span>Actions</span>
               </div>
               {filteredPrompts.map(p => {
@@ -280,8 +280,8 @@ export default function AdminPage() {
                     <span className={styles.statNum}><Heart size={12} /> {formatNumber(p.likes)}</span>
                     <span className={styles.statNum}><Copy size={12} /> {formatNumber(p.copies)}</span>
                     <span>
-                      <span className={p.is_featured ? styles.yes : styles.no}>
-                        {p.is_featured ? '⭐ Yes' : 'No'}
+                      <span className={p.is_premium ? styles.yes : styles.no}>
+                        {p.is_premium ? '👑 Yes' : 'No'}
                       </span>
                     </span>
                     <span className={styles.rowActions}>
@@ -381,10 +381,10 @@ export default function AdminPage() {
               <label className={styles.checkLabel}>
                 <input
                   type="checkbox"
-                  checked={form.is_featured}
-                  onChange={e => setForm(f => ({ ...f, is_featured: e.target.checked }))}
+                  checked={form.is_premium}
+                  onChange={e => setForm(f => ({ ...f, is_premium: e.target.checked }))}
                 />
-                <span>Mark as Featured ⭐</span>
+                <span>Mark as Premium 👑</span>
               </label>
             </div>
 

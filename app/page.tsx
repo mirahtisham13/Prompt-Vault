@@ -42,7 +42,7 @@ function applyFilters(prompts: Prompt[], filters: FilterState): Prompt[] {
   switch (filters.sort) {
     case 'most_liked':  result.sort((a, b) => b.likes - a.likes); break;
     case 'most_copied': result.sort((a, b) => b.copies - a.copies); break;
-    case 'featured':    result.sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0)); break;
+    case 'premium':    result.sort((a, b) => (b.is_premium ? 1 : 0) - (a.is_premium ? 1 : 0)); break;
     case 'newest':
     default:            result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   }

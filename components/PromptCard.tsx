@@ -1,10 +1,11 @@
 'use client';
 import { useState } from 'react';
-import { Heart, Copy, Share2, Maximize2, CheckCircle, Star } from 'lucide-react';
+import { Heart, Copy, Share2, Maximize2, CheckCircle, Lock } from 'lucide-react';
 import { Prompt } from '@/lib/types';
 import { MOCK_CATEGORIES } from '@/lib/mockData';
 import { PLATFORM_META, copyToClipboard, formatNumber, truncateText } from '@/lib/utils';
 import { useToast } from './ToastProvider';
+import { useAuth } from './AuthProvider';
 import PromptFormatter from './PromptFormatter';
 import styles from './PromptCard.module.css';
 
@@ -16,33 +17,16 @@ interface PromptCardProps {
 
 export default function PromptCard({ prompt, onOpenModal, onShare }: PromptCardProps) {
   const { toast } = useToast();
-  const [likes, setLikes] = useState(prompt.likes);
+  const { user, signInWithGoogle } = useAuth();
   const [copies, setCopies] = useState(prompt.copies);
-  const [liked, setLiked] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showFull, setShowFull] = useState(false);
+  const [isFav, setIsFav] = useState(false);
+  const [favLoading, setFavLoading] = useState(false);
 
   const platform = PLATFORM_META[prompt.platform] ?? PLATFORM_META['gemini'];
   const category = MOCK_CATEGORIES.find(c => c.slug === prompt.category);
   const { truncated, isTruncated } = truncateText(prompt.text, 45);
-
-  const handleLike = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setLiked(prev => { 
-      const next = !prev; 
-      setLikes(l => next ? l + 1 : l - 1); 
-      if (next) toast('Added to favorites! ❤️'); 
-      
-      // Ping API to track like
-      fetch('/api/track-like', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ promptId: prompt.id, action: next ? 'like' : 'unlike' })
-      }).catch(console.error);
-
-      return next; 
-    });
-  };
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -50,8 +34,6 @@ export default function PromptCard({ prompt, onOpenModal, onShare }: PromptCardP
       await copyToClipboard(prompt.text);
       setCopied(true); setCopies(c => c + 1); toast('Prompt copied! ✨');
       setTimeout(() => setCopied(false), 2000);
-      
-      // Ping API to track copy
       fetch('/api/track-copy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -60,17 +42,48 @@ export default function PromptCard({ prompt, onOpenModal, onShare }: PromptCardP
     } catch { toast('Failed to copy', 'error'); }
   };
 
+  const handleFavourite = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) {
+      toast('Sign in to save favourites ❤️');
+      signInWithGoogle();
+      return;
+    }
+    setFavLoading(true);
+    try {
+      const { supabase } = await import('@/lib/supabase');
+      if (isFav) {
+        await supabase.from('favourites').delete()
+          .eq('user_id', user.id).eq('prompt_id', prompt.id);
+        setIsFav(false);
+        toast('Removed from favourites');
+      } else {
+        await supabase.from('favourites').insert({ user_id: user.id, prompt_id: prompt.id });
+        setIsFav(true);
+        toast('Saved to favourites ❤️');
+      }
+    } catch { toast('Failed to update favourites', 'error'); }
+    setFavLoading(false);
+  };
+
   return (
     <article className={`card ${styles.card}`}>
       {prompt.image_url && (
         <div className={styles.imageWrap} onClick={() => onOpenModal(prompt)}>
           <img src={prompt.image_url} alt={prompt.title} className={styles.image} loading="lazy" />
           <div className={styles.imageOverlay}><Maximize2 size={20} /></div>
-          {prompt.is_featured && <span className={`badge ${styles.featuredBadge}`}><Star size={10} fill="currentColor" /> Featured</span>}
+          {prompt.is_premium && (
+            <span className={`badge ${styles.premiumBadge}`}>👑 Premium</span>
+          )}
         </div>
       )}
       <div className={styles.body}>
-        <h3 className={styles.title}>{prompt.title}</h3>
+        <div className={styles.titleRow}>
+          <h3 className={styles.title}>{prompt.title}</h3>
+          {prompt.is_premium && !prompt.image_url && (
+            <span className={styles.premiumInline}>👑</span>
+          )}
+        </div>
         <div className={styles.textWrap}>
           <p className={styles.text}>
             <PromptFormatter text={showFull ? prompt.text : truncated} />
@@ -81,8 +94,14 @@ export default function PromptCard({ prompt, onOpenModal, onShare }: PromptCardP
           <div className={styles.tags}>{prompt.tags.slice(0, 4).map(tag => <span key={tag} className={styles.tag}>#{tag}</span>)}</div>
         )}
         <div className={styles.actions}>
-          <button className={`${styles.actionBtn} ${liked ? styles.liked : ''}`} onClick={handleLike} aria-label={liked ? 'Unlike' : 'Like'}>
-            <Heart size={15} fill={liked ? 'currentColor' : 'none'} /><span>{formatNumber(likes)}</span>
+          <button
+            className={`${styles.actionBtn} ${isFav ? styles.favActive : ''}`}
+            onClick={handleFavourite}
+            disabled={favLoading}
+            aria-label={isFav ? 'Remove from favourites' : 'Save to favourites'}
+            title={!user ? 'Sign in to save favourites' : (isFav ? 'Remove from favourites' : 'Save to favourites')}
+          >
+            <Heart size={15} fill={isFav ? 'currentColor' : 'none'} />
           </button>
           <button className={`${styles.actionBtn} ${copied ? styles.copyDone : ''}`} onClick={handleCopy} aria-label="Copy">
             {copied ? <CheckCircle size={15} /> : <Copy size={15} />}<span>{copied ? 'Copied!' : formatNumber(copies)}</span>

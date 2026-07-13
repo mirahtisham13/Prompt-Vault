@@ -1,0 +1,157 @@
+.signInBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease-out);
+  white-space: nowrap;
+}
+.signInBtn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.skeleton {
+  width: 120px;
+  height: 34px;
+  background: var(--bg-card);
+  border-radius: var(--radius-full);
+  opacity: 0.5;
+}
+
+/* ── Logged-in user ── */
+.userWrap {
+  position: relative;
+}
+
+.userBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease-out);
+}
+.userBtn:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+}
+
+.avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.avatarFallback {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--grad-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+.userName {
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chevron {
+  transition: transform var(--duration-base) var(--ease-out);
+  color: var(--text-muted);
+}
+.chevron.open {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown ── */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  overflow: hidden;
+  animation: fadeDown 150ms var(--ease-out);
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dropHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+}
+.dropAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.dropName {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.dropEmail {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.dropDivider {
+  height: 1px;
+  background: var(--border);
+  margin: 0;
+}
+.dropItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 16px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--duration-fast);
+}
+.dropItem:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+.signOutItem {
+  color: var(--danger);
+}
+.signOutItem:hover {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--danger);
+}

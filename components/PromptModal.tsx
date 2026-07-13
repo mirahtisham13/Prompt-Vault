@@ -1,10 +1,11 @@
 'use client';
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { X, Copy, CheckCircle, Heart, Star, Share2, Maximize2 } from 'lucide-react';
+import { X, Copy, CheckCircle, Heart, Share2, Maximize2 } from 'lucide-react';
 import { Prompt } from '@/lib/types';
 import { MOCK_CATEGORIES } from '@/lib/mockData';
 import { PLATFORM_META, copyToClipboard, formatNumber } from '@/lib/utils';
 import { useToast } from './ToastProvider';
+import { useAuth } from './AuthProvider';
 import PromptFormatter from './PromptFormatter';
 import styles from './PromptModal.module.css';
 
@@ -12,8 +13,10 @@ interface PromptModalProps { prompt: Prompt | null; onClose: () => void; onShare
 
 export default function PromptModal({ prompt, onClose, onShare }: PromptModalProps) {
   const { toast } = useToast();
+  const { user, signInWithGoogle } = useAuth();
   const [copied, setCopied] = useState(false);
-  const [liked, setLiked] = useState(false);
+  const [isFav, setIsFav] = useState(false);
+  const [favLoading, setFavLoading] = useState(false);
   const [imgExpanded, setImgExpanded] = useState(false);
   const [textExpanded, setTextExpanded] = useState(false);
   const [varValues, setVarValues] = useState<Record<string, string>>({});
@@ -32,8 +35,26 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
       setImgExpanded(false);
       setTextExpanded(false);
       setVarValues({});
+      setIsFav(false);
     }
   }, [isOpen]);
+
+  const handleFavourite = async () => {
+    if (!prompt) return;
+    if (!user) { toast('Sign in to save favourites ❤️'); signInWithGoogle(); return; }
+    setFavLoading(true);
+    try {
+      const { supabase } = await import('@/lib/supabase');
+      if (isFav) {
+        await supabase.from('favourites').delete().eq('user_id', user.id).eq('prompt_id', prompt.id);
+        setIsFav(false); toast('Removed from favourites');
+      } else {
+        await supabase.from('favourites').insert({ user_id: user.id, prompt_id: prompt.id });
+        setIsFav(true); toast('Saved to favourites ❤️');
+      }
+    } catch { toast('Failed to update favourites', 'error'); }
+    setFavLoading(false);
+  };
 
   const getFinalText = () => {
     if (!prompt) return '';
@@ -79,7 +100,7 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
         )}
         <div className={styles.content}>
           <div className={styles.badges}>
-            {prompt.is_featured && <span className={`badge ${styles.featuredBadge}`}><Star size={10} fill="currentColor" /> Featured</span>}
+            {prompt.is_premium && <span className={`badge ${styles.premiumBadge}`}>👑 Premium</span>}
           </div>
           <h2 className={styles.title}>{prompt.title}</h2>
           
@@ -124,21 +145,13 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
           </div>
           <div className={styles.actions}>
             <button className={`btn btn-primary ${styles.copyBtn}`} onClick={handleCopy}>{copied ? <><CheckCircle size={16} /> Copied!</> : <><Copy size={16} /> Copy Prompt</>}</button>
-            <button 
-              className={`btn btn-ghost ${styles.likeBtn} ${liked ? styles.liked : ''}`} 
-              onClick={() => {
-                setLiked(p => {
-                  const next = !p;
-                  fetch('/api/track-like', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ promptId: prompt.id, action: next ? 'like' : 'unlike' })
-                  }).catch(console.error);
-                  return next;
-                });
-              }}
+            <button
+              className={`btn btn-ghost ${styles.likeBtn} ${isFav ? styles.liked : ''}`}
+              onClick={handleFavourite}
+              disabled={favLoading}
+              title={!user ? 'Sign in to save favourites' : (isFav ? 'Remove from favourites' : 'Save to favourites')}
             >
-              <Heart size={16} fill={liked ? 'currentColor' : 'none'} />
+              <Heart size={16} fill={isFav ? 'currentColor' : 'none'} />
             </button>
             <button className="btn btn-ghost" onClick={() => onShare(prompt)}><Share2 size={16} /></button>
           </div>
