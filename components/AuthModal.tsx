@@ -24,6 +24,7 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
   const [otp, setOtp] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
+  const [isPhoneSignup, setIsPhoneSignup] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -60,9 +61,16 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true); setError('');
-    const { error } = await supabase.auth.signInWithOtp({ phone });
-    if (error) { setError(error.message); }
-    else { setOtpSent(true); setSuccess('OTP sent to your phone!'); }
+    
+    if (isPhoneSignup) {
+      const { error } = await supabase.auth.signUp({ phone, password });
+      if (error) { setError(error.message); }
+      else { setOtpSent(true); setSuccess('OTP sent to your phone!'); }
+    } else {
+      const { error } = await supabase.auth.signInWithPassword({ phone, password });
+      if (error) { setError(error.message); }
+      else { onClose(); router.refresh(); }
+    }
     setLoading(false);
   };
 
@@ -157,10 +165,10 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
           </div>
 
           <h2 className={styles.title} style={{ textAlign: 'center' }}>
-            {mode === 'signup' ? 'Create account' : mode === 'phone' ? 'Phone sign-in' : 'Welcome back'}
+            {mode === 'signup' ? 'Create account' : mode === 'phone' ? (isPhoneSignup ? 'Create Phone Account' : 'Phone Sign In') : 'Welcome back'}
           </h2>
           <p className={styles.subtitle} style={{ textAlign: 'center' }}>
-            {mode === 'signup' ? 'Join free to unlock premium prompts & favourites' : 'Sign in to access premium prompts and your favourites'}
+            {mode === 'signup' ? 'Join free to unlock premium prompts & favourites' : mode === 'phone' ? 'Use your phone number and password' : 'Sign in to access premium prompts and your favourites'}
           </p>
 
           {error && <div className={styles.errorBox}>{error}</div>}
@@ -204,7 +212,7 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
                 {mode === 'signin' ? "Don't have an account? Sign up free" : 'Already have an account? Sign in'}
               </button>
               <button className={styles.phoneBtn} onClick={() => { setMode('phone'); setError(''); setSuccess(''); }}>
-                <Phone size={14} /> Sign in with Phone Number
+                <Phone size={14} /> Continue with Phone Number
               </button>
             </>
           )}
@@ -220,20 +228,32 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
                       <input type="tel" className={`input ${styles.input}`} placeholder="+1234567890" value={phone} onChange={e => setPhone(e.target.value)} required />
                     </div>
                   </div>
+                  <div className={styles.field}>
+                    <label>Password</label>
+                    <div className={styles.inputWrap}>
+                      <input type={showPass ? 'text' : 'password'} className={`input ${styles.input}`} placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required minLength={6} />
+                      <button type="button" className={styles.eyeBtn} onClick={() => setShowPass(p => !p)}>{showPass ? <EyeOff size={15} /> : <Eye size={15} />}</button>
+                    </div>
+                  </div>
                   <button className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
-                    {loading ? 'Sending…' : 'Send OTP'}
+                    {loading ? 'Loading…' : (isPhoneSignup ? 'Sign Up' : 'Sign In')}
                   </button>
                 </form>
               ) : (
                 <form onSubmit={handleVerifyOtp} className={styles.form} style={{ marginTop: '16px' }}>
                   <div className={styles.field}>
-                    <label>Enter OTP</label>
+                    <label>Enter SMS Code</label>
                     <input type="text" className={`input ${styles.input}`} placeholder="123456" value={otp} onChange={e => setOtp(e.target.value)} maxLength={6} required />
                   </div>
                   <button className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
-                    {loading ? 'Verifying…' : 'Verify OTP'}
+                    {loading ? 'Verifying…' : 'Verify Code'}
                   </button>
                 </form>
+              )}
+              {!otpSent && (
+                <button className={styles.switchBtn} onClick={() => { setIsPhoneSignup(s => !s); setError(''); setSuccess(''); }}>
+                  {isPhoneSignup ? "Already have a phone account? Sign in" : "Don't have a phone account? Sign up"}
+                </button>
               )}
               <button className={styles.switchBtn} onClick={() => { setMode('signin'); setOtpSent(false); setError(''); setSuccess(''); }}>
                 ← Back to email sign-in

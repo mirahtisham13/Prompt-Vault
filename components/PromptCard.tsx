@@ -46,17 +46,38 @@ export default function PromptCard({ prompt, onOpenModal, onShare }: PromptCardP
       .then(({ data }) => setBookmarked(!!data));
   }, [user, prompt.id]);
 
+  // Check if already liked locally
+  useEffect(() => {
+    const likedPrompts = JSON.parse(localStorage.getItem('pv-liked-prompts') || '[]');
+    if (likedPrompts.includes(prompt.id)) {
+      setLiked(true);
+    }
+  }, [prompt.id]);
+
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
     setLiked(prev => { 
       const next = !prev; 
       setLikes(l => next ? l + 1 : l - 1); 
+      
+      const likedPrompts = JSON.parse(localStorage.getItem('pv-liked-prompts') || '[]');
+      
       if (next) {
         toast('Added to favorites! ❤️');
         // Track local count
         const currentLikes = parseInt(localStorage.getItem('pv-total-likes') || '0', 10);
         localStorage.setItem('pv-total-likes', (currentLikes + 1).toString());
+        // Track specific prompt
+        if (!likedPrompts.includes(prompt.id)) {
+          likedPrompts.push(prompt.id);
+          localStorage.setItem('pv-liked-prompts', JSON.stringify(likedPrompts));
+        }
+      } else {
+        // Untrack specific prompt if unliked
+        const updatedPrompts = likedPrompts.filter((id: string) => id !== prompt.id);
+        localStorage.setItem('pv-liked-prompts', JSON.stringify(updatedPrompts));
       }
+      
       fetch('/api/track-like', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
