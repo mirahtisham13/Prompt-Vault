@@ -10,6 +10,7 @@ import PromptCard from '@/components/PromptCard';
 import PromptModal from '@/components/PromptModal';
 import ShareModal from '@/components/ShareModal';
 import Header from '@/components/Header';
+import DeleteAccountModal from '@/components/DeleteAccountModal';
 import styles from './favourites.module.css';
 
 export default function FavouritesPage() {
@@ -20,6 +21,7 @@ export default function FavouritesPage() {
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
   const [sharePrompt, setSharePrompt] = useState<Prompt | null>(null);
   const [search, setSearch] = useState('');
+  const [showDelete, setShowDelete] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -90,10 +92,26 @@ export default function FavouritesPage() {
             ))}
           </div>
         )}
+
+        {/* Account settings section */}
+        <div style={{ marginTop: '80px', padding: '32px 0', borderTop: '1px solid var(--border)' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '12px' }}>Account Settings</h2>
+          <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+            Permanently delete your account and all associated data. This action cannot be undone.
+          </p>
+          <button 
+            className="btn btn-ghost" 
+            style={{ color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)', background: 'rgba(239, 68, 68, 0.05)' }}
+            onClick={() => setShowDelete(true)}
+          >
+            Delete Account
+          </button>
+        </div>
       </div>
 
       <PromptModal prompt={selectedPrompt} onClose={() => setSelectedPrompt(null)} onShare={p => { setSelectedPrompt(null); setSharePrompt(p); }} />
       <ShareModal prompt={sharePrompt} onClose={() => setSharePrompt(null)} />
+      {showDelete && <DeleteAccountModal onClose={() => setShowDelete(false)} />}
     </div>
   );
 }
