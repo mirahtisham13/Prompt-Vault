@@ -97,7 +97,7 @@ export default function Header({ onSearch, searchValue }: HeaderProps) {
           {searchValue && <button onClick={() => onSearch('')} className={styles.clearBtn}><X size={14} /></button>}
         </div>
       )}
-      {showAuth && <AuthModal onClose={() => setShowAuth(false)} reason="login" />}
+      {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
     </header>
   );
 }
