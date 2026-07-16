@@ -7,7 +7,7 @@ import PromptCard from '@/components/PromptCard';
 import SkeletonCard from '@/components/SkeletonCard';
 import PromptModal from '@/components/PromptModal';
 import ShareModal from '@/components/ShareModal';
-import WelcomeModal from '@/components/WelcomeModal';
+import AuthModal from '@/components/AuthModal';
 import { useAuth } from '@/lib/auth-context';
 import { Prompt, FilterState, SortOption } from '@/lib/types';
 import { Platform } from '@/lib/utils';
@@ -185,7 +185,7 @@ export default function HomePage() {
         onClose={() => setSharePrompt(null)}
       />
       {showWelcome && (
-        <WelcomeModal onClose={() => setShowWelcome(false)} />
+        <AuthModal onClose={() => setShowWelcome(false)} reason="welcome" />
       )}
     </>
   );

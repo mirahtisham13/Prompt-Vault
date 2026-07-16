@@ -2,9 +2,10 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, Zap, X, LogOut, Bookmark, User, ChevronDown } from 'lucide-react';
+import { Search, Zap, X, LogOut, Bookmark, ChevronDown } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { useAuth } from '@/lib/auth-context';
+import AuthModal from './AuthModal';
 import styles from './Header.module.css';
 
 interface HeaderProps { onSearch: (q: string) => void; searchValue: string; }
@@ -15,6 +16,7 @@ export default function Header({ onSearch, searchValue }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -81,9 +83,9 @@ export default function Header({ onSearch, searchValue }: HeaderProps) {
                 )}
               </div>
             ) : (
-              <Link href="/login" className={`btn btn-primary ${styles.signInBtn}`}>
+              <button className={`btn btn-primary ${styles.signInBtn}`} onClick={() => setShowAuth(true)}>
                 Sign In
-              </Link>
+              </button>
             )
           )}
         </div>
@@ -95,6 +97,7 @@ export default function Header({ onSearch, searchValue }: HeaderProps) {
           {searchValue && <button onClick={() => onSearch('')} className={styles.clearBtn}><X size={14} /></button>}
         </div>
       )}
+      {showAuth && <AuthModal onClose={() => setShowAuth(false)} reason="login" />}
     </header>
   );
 }
