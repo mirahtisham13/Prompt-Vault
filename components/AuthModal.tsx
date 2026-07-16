@@ -105,7 +105,7 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
                 Continue with Google
               </button>
               <button className="btn btn-primary" style={{ width: '100%' }} onClick={() => setMode('signin')}>
-                Sign in with Email or Phone
+                Continue with Email
               </button>
             </div>
 
