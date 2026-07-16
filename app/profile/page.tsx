@@ -102,31 +102,31 @@ export default function ProfileDashboard() {
           <h2 className={styles.sectionTitle}>Overview</h2>
           <div className={styles.statsGrid}>
             <div className={styles.statCard}>
-              <div className={styles.statIcon} style={{ color: '#8b5cf6', background: 'rgba(139, 92, 246, 0.1)' }}>
-                <Copy size={24} />
+              <div className={styles.statIcon} style={{ color: '#a78bfa', background: 'rgba(139, 92, 246, 0.15)', boxShadow: '0 0 30px rgba(139, 92, 246, 0.2)' }}>
+                <Copy size={26} strokeWidth={2.5} />
               </div>
               <div>
-                <div className={styles.statValue}>{localCopies}</div>
+                <div className={styles.statValue} style={{ background: 'linear-gradient(to right, #fff, #a78bfa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{localCopies}</div>
                 <div className={styles.statLabel}>Prompts Copied</div>
               </div>
             </div>
             
             <div className={styles.statCard}>
-              <div className={styles.statIcon} style={{ color: '#ec4899', background: 'rgba(236, 72, 153, 0.1)' }}>
-                <Heart size={24} />
+              <div className={styles.statIcon} style={{ color: '#f472b6', background: 'rgba(236, 72, 153, 0.15)', boxShadow: '0 0 30px rgba(236, 72, 153, 0.2)' }}>
+                <Heart size={26} strokeWidth={2.5} />
               </div>
               <div>
-                <div className={styles.statValue}>{localLikes}</div>
+                <div className={styles.statValue} style={{ background: 'linear-gradient(to right, #fff, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{localLikes}</div>
                 <div className={styles.statLabel}>Prompts Liked</div>
               </div>
             </div>
             
             <div className={styles.statCard}>
-              <div className={styles.statIcon} style={{ color: '#06b6d4', background: 'rgba(6, 182, 212, 0.1)' }}>
-                <Bookmark size={24} />
+              <div className={styles.statIcon} style={{ color: '#22d3ee', background: 'rgba(6, 182, 212, 0.15)', boxShadow: '0 0 30px rgba(6, 182, 212, 0.2)' }}>
+                <Bookmark size={26} strokeWidth={2.5} />
               </div>
               <div>
-                <div className={styles.statValue}>{prompts.length}</div>
+                <div className={styles.statValue} style={{ background: 'linear-gradient(to right, #fff, #22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{prompts.length}</div>
                 <div className={styles.statLabel}>Favourites Saved</div>
               </div>
             </div>
