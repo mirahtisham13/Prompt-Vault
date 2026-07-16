@@ -104,11 +104,11 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
                 </svg>
                 Continue with Google
               </button>
-              <button className="btn btn-primary" style={{ width: '100%' }} onClick={() => setMode('signin')}>
+              <button className="btn btn-ghost" style={{ width: '100%', border: '1px solid var(--border)' }} onClick={() => setMode('signin')}>
                 Sign In with Email
               </button>
-              <button className="btn btn-ghost" style={{ width: '100%', marginTop: '8px', border: '1px solid var(--border)' }} onClick={() => setMode('signup')}>
-                Create Account
+              <button className="btn btn-primary" style={{ width: '100%', marginTop: '8px' }} onClick={() => setMode('signup')}>
+                New User? Create account
               </button>
             </div>
 
