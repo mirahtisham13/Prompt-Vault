@@ -7,6 +7,8 @@ import PromptCard from '@/components/PromptCard';
 import SkeletonCard from '@/components/SkeletonCard';
 import PromptModal from '@/components/PromptModal';
 import ShareModal from '@/components/ShareModal';
+import WelcomeModal from '@/components/WelcomeModal';
+import { useAuth } from '@/lib/auth-context';
 import { Prompt, FilterState, SortOption } from '@/lib/types';
 import { Platform } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
@@ -51,11 +53,13 @@ function applyFilters(prompts: Prompt[], filters: FilterState): Prompt[] {
 }
 
 export default function HomePage() {
+  const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [page, setPage] = useState(1);
   const [activeModal, setActiveModal] = useState<Prompt | null>(null);
   const [sharePrompt, setSharePrompt] = useState<Prompt | null>(null);
+  const [showWelcome, setShowWelcome] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   const [filters, setFilters] = useState<FilterState>({
@@ -80,6 +84,15 @@ export default function HomePage() {
     };
     fetchPrompts();
   }, []);
+
+  // Show welcome modal for guests after a 1-second delay
+  useEffect(() => {
+    if (authLoading) return; // wait until auth is resolved
+    if (!user) {
+      const timer = setTimeout(() => setShowWelcome(true), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [user, authLoading]);
 
   const filtered = useMemo(() => applyFilters(prompts, filters), [prompts, filters]);
   const paginated = useMemo(() => filtered.slice(0, page * PAGE_SIZE), [filtered, page]);
@@ -171,6 +184,9 @@ export default function HomePage() {
         prompt={sharePrompt}
         onClose={() => setSharePrompt(null)}
       />
+      {showWelcome && (
+        <WelcomeModal onClose={() => setShowWelcome(false)} />
+      )}
     </>
   );
 }
