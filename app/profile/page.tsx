@@ -29,7 +29,7 @@ export default function ProfileDashboard() {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/login');
+      router.push('/');
     }
   }, [user, loading, router]);
 
