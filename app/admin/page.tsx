@@ -245,7 +245,7 @@ export default function AdminPage() {
         {/* Stats row */}
         <div className={styles.statsRow}>
           {[
-            { label: 'Verified Users', value: totalUsers, icon: <Users size={18} />, color: '#10b981' },
+            { label: 'Total Users', value: totalUsers, icon: <Users size={18} />, color: '#10b981' },
             { label: 'Total Prompts', value: prompts.length, icon: <Tag size={18} />, color: '#8b5cf6' },
             { label: 'Total Likes',   value: formatNumber(totalLikes),  icon: <Heart size={18} />, color: '#f43f5e' },
             { label: 'Total Copies',  value: formatNumber(totalCopies), icon: <Copy size={18} />,  color: '#06b6d4' },
