@@ -7,7 +7,9 @@
 .expandBtn { position: absolute; bottom: 10px; right: 10px; display: flex; align-items: center; gap: 5px; padding: 5px 10px; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); color: white; border-radius: var(--radius-md); font-size: 12px; font-weight: 600; }
 .content { padding: 20px 20px 0; display: flex; flex-direction: column; gap: 12px; }
 .badges { display: flex; flex-wrap: wrap; gap: 6px; }
-.premiumBadge { background: rgba(139,92,246,0.2); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
+.featuredBadge { background: rgba(245,158,11,0.2); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+.premiumBadge { background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(139,92,246,0.15)); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+.bookmarked { color: var(--primary-light) !important; background: rgba(139,92,246,0.15) !important; }
 .catBadge { background: color-mix(in srgb, var(--cat-color, var(--primary)) 12%, transparent); color: var(--cat-color, var(--primary)); border: 1px solid color-mix(in srgb, var(--cat-color, var(--primary)) 25%, transparent); }
 .platBadge { background: color-mix(in srgb, var(--p-color, var(--primary)) 12%, transparent); color: var(--p-color, var(--primary)); border: 1px solid color-mix(in srgb, var(--p-color, var(--primary)) 25%, transparent); }
 .title { font-size: 22px; font-weight: 800; line-height: 1.25; }

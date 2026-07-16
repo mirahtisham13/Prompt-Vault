@@ -1,11 +1,12 @@
 'use client';
-import { useState, useRef, useEffect, useMemo } from 'react';
-import { X, Copy, CheckCircle, Heart, Share2, Maximize2 } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { X, Copy, CheckCircle, Heart, Crown, Share2, Maximize2, Bookmark, BookmarkCheck } from 'lucide-react';
 import { Prompt } from '@/lib/types';
 import { MOCK_CATEGORIES } from '@/lib/mockData';
 import { PLATFORM_META, copyToClipboard, formatNumber } from '@/lib/utils';
 import { useToast } from './ToastProvider';
-import { useAuth } from './AuthProvider';
+import { useAuth } from '@/lib/auth-context';
+import { supabase } from '@/lib/supabase';
 import PromptFormatter from './PromptFormatter';
 import styles from './PromptModal.module.css';
 
@@ -13,13 +14,13 @@ interface PromptModalProps { prompt: Prompt | null; onClose: () => void; onShare
 
 export default function PromptModal({ prompt, onClose, onShare }: PromptModalProps) {
   const { toast } = useToast();
-  const { user, signInWithGoogle } = useAuth();
+  const { user } = useAuth();
   const [copied, setCopied] = useState(false);
-  const [isFav, setIsFav] = useState(false);
-  const [favLoading, setFavLoading] = useState(false);
+  const [liked, setLiked] = useState(false);
   const [imgExpanded, setImgExpanded] = useState(false);
   const [textExpanded, setTextExpanded] = useState(false);
   const [varValues, setVarValues] = useState<Record<string, string>>({});
+  const [bookmarked, setBookmarked] = useState(false);
   const isOpen = !!prompt;
 
   const variables = useMemo(() => {
@@ -35,26 +36,28 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
       setImgExpanded(false);
       setTextExpanded(false);
       setVarValues({});
-      setIsFav(false);
     }
-  }, [isOpen]);
+    // Check bookmark status
+    if (isOpen && user && prompt) {
+      supabase.from('favourites').select('id').eq('user_id', user.id).eq('prompt_id', prompt.id).maybeSingle()
+        .then(({ data }) => setBookmarked(!!data));
+    } else {
+      setBookmarked(false);
+    }
+  }, [isOpen, user, prompt?.id]);
 
-  const handleFavourite = async () => {
+  const handleBookmark = async () => {
     if (!prompt) return;
-    if (!user) { toast('Sign in to save favourites ❤️'); signInWithGoogle(); return; }
-    setFavLoading(true);
-    try {
-      const { supabase } = await import('@/lib/supabase');
-      if (isFav) {
-        await supabase.from('favourites').delete().eq('user_id', user.id).eq('prompt_id', prompt.id);
-        setIsFav(false); toast('Removed from favourites');
-      } else {
-        await supabase.from('favourites').insert({ user_id: user.id, prompt_id: prompt.id });
-        setIsFav(true); toast('Saved to favourites ❤️');
-      }
-    } catch { toast('Failed to update favourites', 'error'); }
-    setFavLoading(false);
+    if (!user) return;
+    if (bookmarked) {
+      await supabase.from('favourites').delete().eq('user_id', user.id).eq('prompt_id', prompt.id);
+      setBookmarked(false); toast('Removed from favourites');
+    } else {
+      await supabase.from('favourites').insert({ user_id: user.id, prompt_id: prompt.id });
+      setBookmarked(true); toast('Saved to favourites! 🔖');
+    }
   };
+
 
   const getFinalText = () => {
     if (!prompt) return '';
@@ -100,7 +103,7 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
         )}
         <div className={styles.content}>
           <div className={styles.badges}>
-            {prompt.is_premium && <span className={`badge ${styles.premiumBadge}`}>👑 Premium</span>}
+            {prompt.is_premium && <span className={`badge ${styles.premiumBadge}`}><Crown size={10} fill="currentColor" /> Premium</span>}
           </div>
           <h2 className={styles.title}>{prompt.title}</h2>
           
@@ -145,14 +148,27 @@ export default function PromptModal({ prompt, onClose, onShare }: PromptModalPro
           </div>
           <div className={styles.actions}>
             <button className={`btn btn-primary ${styles.copyBtn}`} onClick={handleCopy}>{copied ? <><CheckCircle size={16} /> Copied!</> : <><Copy size={16} /> Copy Prompt</>}</button>
-            <button
-              className={`btn btn-ghost ${styles.likeBtn} ${isFav ? styles.liked : ''}`}
-              onClick={handleFavourite}
-              disabled={favLoading}
-              title={!user ? 'Sign in to save favourites' : (isFav ? 'Remove from favourites' : 'Save to favourites')}
+            <button 
+              className={`btn btn-ghost ${styles.likeBtn} ${liked ? styles.liked : ''}`} 
+              onClick={() => {
+                setLiked(p => {
+                  const next = !p;
+                  fetch('/api/track-like', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ promptId: prompt.id, action: next ? 'like' : 'unlike' })
+                  }).catch(console.error);
+                  return next;
+                });
+              }}
             >
-              <Heart size={16} fill={isFav ? 'currentColor' : 'none'} />
+              <Heart size={16} fill={liked ? 'currentColor' : 'none'} />
             </button>
+            {user && (
+              <button className={`btn btn-ghost ${bookmarked ? styles.bookmarked : ''}`} onClick={handleBookmark} aria-label={bookmarked ? 'Remove bookmark' : 'Save to favourites'}>
+                {bookmarked ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
+              </button>
+            )}
             <button className="btn btn-ghost" onClick={() => onShare(prompt)}><Share2 size={16} /></button>
           </div>
         </div>

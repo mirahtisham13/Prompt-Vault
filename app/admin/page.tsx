@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   Zap, Plus, Edit2, Trash2, LogOut, BarChart2,
-  Heart, Copy, Star, X, Save, ChevronDown, Tag
+  Heart, Copy, Crown, X, Save, ChevronDown, Tag
 } from 'lucide-react';
 import { Prompt } from '@/lib/types';
 import { MOCK_PROMPTS, MOCK_CATEGORIES } from '@/lib/mockData';
@@ -53,7 +53,7 @@ export default function AdminPage() {
   // ── Stats ──────────────────────────────────────────────────
   const totalLikes  = prompts.reduce((s, p) => s + p.likes, 0);
   const totalCopies = prompts.reduce((s, p) => s + p.copies, 0);
-  const premium     = prompts.filter(p => p.is_premium).length;
+  const featured    = prompts.filter(p => p.is_premium).length;
 
   // ── Form helpers ───────────────────────────────────────────
   const openNew = () => {
@@ -237,7 +237,7 @@ export default function AdminPage() {
             { label: 'Total Prompts', value: prompts.length, icon: <Tag size={18} />, color: '#8b5cf6' },
             { label: 'Total Likes',   value: formatNumber(totalLikes),  icon: <Heart size={18} />, color: '#f43f5e' },
             { label: 'Total Copies',  value: formatNumber(totalCopies), icon: <Copy size={18} />,  color: '#06b6d4' },
-            { label: 'Premium',       value: premium, icon: <Star size={18} />, color: '#8b5cf6' },
+            { label: 'Premium',      value: featured, icon: <Crown size={18} />, color: '#f59e0b' },
           ].map(s => (
             <div key={s.label} className={styles.statCard}>
               <span className={styles.statIcon} style={{ background: `${s.color}20`, color: s.color }}>

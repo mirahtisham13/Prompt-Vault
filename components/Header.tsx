@@ -1,21 +1,50 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Search, Zap, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Search, Zap, X, LogOut, Bookmark, User, ChevronDown } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
-import AuthButton from './AuthButton';
+import { useAuth } from '@/lib/auth-context';
 import styles from './Header.module.css';
+
 interface HeaderProps { onSearch: (q: string) => void; searchValue: string; }
+
 export default function Header({ onSearch, searchValue }: HeaderProps) {
+  const { user, signOut, loading } = useAuth();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handler, { passive: true });
     return () => window.removeEventListener('scroll', handler);
   }, []);
+
   useEffect(() => { if (showSearch) inputRef.current?.focus(); }, [showSearch]);
+
+  // Close menu on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowUserMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const handleSignOut = async () => {
+    await signOut();
+    setShowUserMenu(false);
+    router.refresh();
+  };
+
+  const userInitials = user?.email ? user.email[0].toUpperCase() : user?.phone ? '📱' : 'U';
+
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={`container ${styles.inner}`}>
@@ -31,7 +60,32 @@ export default function Header({ onSearch, searchValue }: HeaderProps) {
         <div className={styles.actions}>
           <button className={`${styles.iconBtn} hide-desktop`} onClick={() => setShowSearch(s => !s)} aria-label="Search"><Search size={18} /></button>
           <ThemeToggle />
-          <AuthButton />
+
+          {!loading && (
+            user ? (
+              <div className={styles.userWrap} ref={menuRef}>
+                <button className={styles.avatarBtn} onClick={() => setShowUserMenu(s => !s)} aria-label="User menu">
+                  <span className={styles.avatar}>{userInitials}</span>
+                  <ChevronDown size={14} className={showUserMenu ? styles.chevronUp : ''} />
+                </button>
+                {showUserMenu && (
+                  <div className={styles.dropdown}>
+                    <div className={styles.dropEmail}>{user.email || user.phone}</div>
+                    <Link href="/favourites" className={styles.dropItem} onClick={() => setShowUserMenu(false)}>
+                      <Bookmark size={14} /> My Favourites
+                    </Link>
+                    <button className={`${styles.dropItem} ${styles.signOutItem}`} onClick={handleSignOut}>
+                      <LogOut size={14} /> Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link href="/login" className={`btn btn-primary ${styles.signInBtn}`}>
+                Sign In
+              </Link>
+            )
+          )}
         </div>
       </div>
       {showSearch && (
