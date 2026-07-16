@@ -105,7 +105,7 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
                 Continue with Google
               </button>
               <button className="btn btn-ghost" style={{ width: '100%', border: '1px solid var(--border)' }} onClick={() => setMode('signin')}>
-                Sign In with Email
+                Continue with Email
               </button>
               <button className="btn btn-primary" style={{ width: '100%', marginTop: '8px' }} onClick={() => setMode('signup')}>
                 New User? Create account
@@ -177,12 +177,7 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
                 {mode === 'signin' ? "Don't have an account? Sign up free" : 'Already have an account? Sign in'}
               </button>
             </>
-          
-          {reason !== 'login' && (
-            <button className={styles.skipBtn} onClick={() => setMode('perks')}>
-              ← Back
-            </button>
-          )}
+
         </div>
       </div>
     </div>
