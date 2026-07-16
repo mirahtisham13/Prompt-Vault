@@ -19,9 +19,12 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
         setError('Invalid email or password. Please try again.');
+      } else if (data.user?.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+        await supabase.auth.signOut();
+        setError('Access denied: You do not have admin privileges.');
       } else {
         router.push('/admin');
       }

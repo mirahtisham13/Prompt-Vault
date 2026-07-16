@@ -37,7 +37,9 @@ export default function AdminPage() {
   useEffect(() => {
     const checkAuthAndFetch = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+      
+      if (!session || session.user.email !== adminEmail) {
         router.push('/admin/login');
         return;
       }
