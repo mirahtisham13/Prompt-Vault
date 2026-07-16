@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Zap, Lock, Eye, EyeOff, LogIn } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdminApp as supabase } from '@/lib/supabase';
 import styles from './login.module.css';
 
 export default function AdminLoginPage() {

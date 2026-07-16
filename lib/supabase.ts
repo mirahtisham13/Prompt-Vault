@@ -5,6 +5,12 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholde
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+export const supabaseAdminApp = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    storageKey: 'prompt-vault-admin-auth',
+  }
+});
+
 export const getSupabaseAdmin = () => {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
   return createClient(supabaseUrl, serviceRoleKey, {
