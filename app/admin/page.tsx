@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   Zap, Plus, Edit2, Trash2, LogOut, BarChart2,
-  Heart, Copy, Crown, X, Save, ChevronDown, Tag
+  Heart, Copy, Crown, X, Save, ChevronDown, Tag, Users
 } from 'lucide-react';
 import { Prompt } from '@/lib/types';
 import { MOCK_PROMPTS, MOCK_CATEGORIES } from '@/lib/mockData';
@@ -25,6 +25,7 @@ export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
   const [tab, setTab] = useState<Tab>('prompts');
   const [prompts, setPrompts] = useState<Prompt[]>([]);
+  const [totalUsers, setTotalUsers] = useState<number>(0);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ ...EMPTY_PROMPT });
@@ -46,6 +47,14 @@ export default function AdminPage() {
       setAuthed(true);
       const { data } = await supabase.from('prompts').select('*').order('created_at', { ascending: false });
       if (data) setPrompts(data as Prompt[]);
+      
+      try {
+        const res = await fetch('/api/admin/stats');
+        const stats = await res.json();
+        if (stats.totalVerifiedUsers !== undefined) setTotalUsers(stats.totalVerifiedUsers);
+      } catch (e) {
+        console.error("Failed to fetch user stats", e);
+      }
     };
     checkAuthAndFetch();
   }, [router]);
@@ -236,6 +245,7 @@ export default function AdminPage() {
         {/* Stats row */}
         <div className={styles.statsRow}>
           {[
+            { label: 'Verified Users', value: totalUsers, icon: <Users size={18} />, color: '#10b981' },
             { label: 'Total Prompts', value: prompts.length, icon: <Tag size={18} />, color: '#8b5cf6' },
             { label: 'Total Likes',   value: formatNumber(totalLikes),  icon: <Heart size={18} />, color: '#f43f5e' },
             { label: 'Total Copies',  value: formatNumber(totalCopies), icon: <Copy size={18} />,  color: '#06b6d4' },
