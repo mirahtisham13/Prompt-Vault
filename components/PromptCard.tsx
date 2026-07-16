@@ -51,7 +51,12 @@ export default function PromptCard({ prompt, onOpenModal, onShare }: PromptCardP
     setLiked(prev => { 
       const next = !prev; 
       setLikes(l => next ? l + 1 : l - 1); 
-      if (next) toast('Added to favorites! ❤️'); 
+      if (next) {
+        toast('Added to favorites! ❤️');
+        // Track local count
+        const currentLikes = parseInt(localStorage.getItem('pv-total-likes') || '0', 10);
+        localStorage.setItem('pv-total-likes', (currentLikes + 1).toString());
+      }
       fetch('/api/track-like', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -67,6 +72,11 @@ export default function PromptCard({ prompt, onOpenModal, onShare }: PromptCardP
     try {
       await copyToClipboard(prompt.text);
       setCopied(true); setCopies(c => c + 1); toast('Prompt copied! ✨');
+      
+      // Track local count
+      const currentCopies = parseInt(localStorage.getItem('pv-total-copies') || '0', 10);
+      localStorage.setItem('pv-total-copies', (currentCopies + 1).toString());
+
       setTimeout(() => setCopied(false), 2000);
       fetch('/api/track-copy', {
         method: 'POST',
