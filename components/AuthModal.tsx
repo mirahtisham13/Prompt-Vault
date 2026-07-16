@@ -10,7 +10,7 @@ interface AuthModalProps {
   reason?: 'premium' | 'favourite' | 'welcome' | 'login';
 }
 
-type Mode = 'select' | 'email' | 'phone';
+type Mode = 'select' | 'email';
 
 export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProps) {
   const router = useRouter();
@@ -20,10 +20,7 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState('');
   const [showPass, setShowPass] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -57,28 +54,6 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
     setLoading(false);
   };
 
-  const handleSendOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true); setError('');
-    
-    if (isSignup) {
-      const { error } = await supabase.auth.signUp({ phone, password });
-      if (error) { setError(error.message); }
-      else { setOtpSent(true); setSuccess('OTP sent to your phone!'); }
-    } else {
-      const { error } = await supabase.auth.signInWithPassword({ phone, password });
-      if (error) { setError(error.message); }
-      else { onClose(); router.refresh(); }
-    }
-    setLoading(false);
-  };
-
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true); setError('');
-    const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: 'sms' });
-    if (error) { setError(error.message); }
-    else { onClose(); router.refresh(); }
     setLoading(false);
   };
 
@@ -99,7 +74,7 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
             {mode === 'select' ? (isSignup ? 'Create account' : 'Welcome back') : (isSignup ? 'Create account' : 'Sign in')}
           </h2>
           <p className={styles.subtitle} style={{ textAlign: 'center' }}>
-            {mode === 'select' ? (isSignup ? 'Join free to unlock premium prompts & favourites' : 'Sign in to access premium prompts and your favourites') : `Continue with ${mode === 'email' ? 'Email' : 'Phone Number'}`}
+            {mode === 'select' ? (isSignup ? 'Join free to unlock premium prompts & favourites' : 'Sign in to access premium prompts and your favourites') : 'Continue with Email'}
           </p>
 
           {error && <div className={styles.errorBox}>{error}</div>}
@@ -121,10 +96,6 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
               
               <button className={`btn btn-ghost`} style={{ border: '1px solid var(--border)' }} onClick={() => { setMode('email'); setError(''); setSuccess(''); }}>
                 <Mail size={16} /> Continue with Email
-              </button>
-              
-              <button className={`btn btn-ghost`} style={{ border: '1px solid var(--border)' }} onClick={() => { setMode('phone'); setError(''); setSuccess(''); }}>
-                <Phone size={16} /> Continue with Phone Number
               </button>
               
               <button className={styles.switchBtn} style={{ marginTop: '16px' }} onClick={() => { setIsSignup(s => !s); setError(''); setSuccess(''); }}>
@@ -155,45 +126,6 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
                 </button>
               </form>
               <button className={styles.switchBtn} onClick={() => { setMode('select'); setError(''); setSuccess(''); }}>
-                ← Back to options
-              </button>
-            </>
-          )}
-
-          {mode === 'phone' && (
-            <>
-              {!otpSent ? (
-                <form onSubmit={handleSendOtp} className={styles.form} style={{ marginTop: '16px' }}>
-                  <div className={styles.field}>
-                    <label>Phone Number</label>
-                    <div className={styles.inputWrap}>
-                      <Phone size={15} className={styles.inputIcon} />
-                      <input type="tel" className={`input ${styles.input}`} placeholder="+1234567890" value={phone} onChange={e => setPhone(e.target.value)} required />
-                    </div>
-                  </div>
-                  <div className={styles.field}>
-                    <label>Password</label>
-                    <div className={styles.inputWrap}>
-                      <input type={showPass ? 'text' : 'password'} className={`input ${styles.input}`} placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required minLength={6} />
-                      <button type="button" className={styles.eyeBtn} onClick={() => setShowPass(p => !p)}>{showPass ? <EyeOff size={15} /> : <Eye size={15} />}</button>
-                    </div>
-                  </div>
-                  <button className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
-                    {loading ? 'Loading…' : (isSignup ? 'Sign Up' : 'Sign In')}
-                  </button>
-                </form>
-              ) : (
-                <form onSubmit={handleVerifyOtp} className={styles.form} style={{ marginTop: '16px' }}>
-                  <div className={styles.field}>
-                    <label>Enter SMS Code</label>
-                    <input type="text" className={`input ${styles.input}`} placeholder="123456" value={otp} onChange={e => setOtp(e.target.value)} maxLength={6} required />
-                  </div>
-                  <button className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
-                    {loading ? 'Verifying…' : 'Verify Code'}
-                  </button>
-                </form>
-              )}
-              <button className={styles.switchBtn} onClick={() => { setMode('select'); setOtpSent(false); setError(''); setSuccess(''); }}>
                 ← Back to options
               </button>
             </>
