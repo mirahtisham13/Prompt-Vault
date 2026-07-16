@@ -136,9 +136,7 @@ export default function AuthModal({ onClose, reason = 'welcome' }: AuthModalProp
               </button>
             </div>
 
-            <button className={styles.skipBtn} onClick={onClose}>
-              Browse without signing in →
-            </button>
+
           </div>
         </div>
       </div>
