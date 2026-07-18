@@ -125,6 +125,27 @@ export default function HomePage() {
         searchValue={filters.search}
       />
 
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'PromptBytes',
+            description: 'The ultimate free AI prompt library for ChatGPT, Gemini, Claude, Midjourney, and more.',
+            url: 'https://promptbytes.vercel.app',
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: {
+                '@type': 'EntryPoint',
+                urlTemplate: 'https://promptbytes.vercel.app/?search={search_term_string}',
+              },
+              'query-input': 'required name=search_term_string',
+            },
+          }),
+        }}
+      />
+
       <main>
         <HeroSection />
 

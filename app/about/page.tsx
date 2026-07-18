@@ -1,8 +1,20 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About Us | PromptBytes',
-  description: 'Learn more about PromptBytes, the ultimate AI prompt library.',
+  title: 'About Us',
+  description: 'Learn about PromptBytes — the ultimate free AI prompt library for ChatGPT, Gemini, Claude, Midjourney, and more. Our mission is to democratize prompt engineering for everyone.',
+  alternates: { canonical: '/about' },
+  openGraph: {
+    title: 'About PromptBytes | AI Prompt Library',
+    description: 'Learn about PromptBytes — the ultimate free AI prompt library for ChatGPT, Gemini, Claude, Midjourney, and more.',
+    url: '/about',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'About PromptBytes | AI Prompt Library',
+    description: 'Learn about PromptBytes — the ultimate free AI prompt library for ChatGPT, Gemini, Claude, Midjourney, and more.',
+  },
 };
 
 export default function AboutPage() {

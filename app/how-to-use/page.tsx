@@ -1,8 +1,20 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'How to Use | PromptBytes',
-  description: 'Learn how to use PromptBytes to get the best results from AI.',
+  title: 'How to Use',
+  description: 'Learn how to get the best results from PromptBytes. Find, copy, and use AI prompts for ChatGPT, Gemini, Claude, Midjourney, and more in just a few clicks.',
+  alternates: { canonical: '/how-to-use' },
+  openGraph: {
+    title: 'How to Use PromptBytes | AI Prompt Library',
+    description: 'Learn how to find, copy, and use AI prompts for ChatGPT, Gemini, Claude, Midjourney, and more in just a few clicks.',
+    url: '/how-to-use',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'How to Use PromptBytes | AI Prompt Library',
+    description: 'Learn how to find, copy, and use AI prompts for ChatGPT, Gemini, Claude, Midjourney, and more in just a few clicks.',
+  },
 };
 
 export default function HowToUsePage() {
